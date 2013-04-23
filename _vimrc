@@ -46,11 +46,11 @@ set rtp+=$VIM\vimfiles\vundle
 "
 "
 "source $VIMRUNTIME/vimrc_example.vim
-source $VIMRUNTIME/mswin.vim
+"source $VIMRUNTIME/mswin.vim
 "set dictionary=$VIM/words.dic
 "press <C-x> <C-k> to complete your word in words.di
 
-behave mswin
+"behave mswin
 
 "set diffexpr=MyDiff()
 "function MyDiff()
@@ -403,6 +403,7 @@ endif
 ""cursor tracking (this feature gives quite a slowdown when scrolling through the file)
 "set cursorcolumn
 "set cursorline
+set cc=80
 ""------------------------------------------------------------
 ""use mouse anywhere in the window
 "if has('mouse')
@@ -417,7 +418,7 @@ set shortmess=atI
 " fold {{{
 "用空格键来开关折叠
 nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc':'zo')<CR>
-set foldenable
+"set foldenable
 set fdm=indent
 "don't autofold anything (but I can still fold manually)
 "set foldlevel=100

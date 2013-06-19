@@ -46,11 +46,12 @@ set rtp+=$VIM\vimfiles\vundle
 "
 "
 "source $VIMRUNTIME/vimrc_example.vim
-"source $VIMRUNTIME/mswin.vim
+source $VIMRUNTIME/mswin.vim
 "set dictionary=$VIM/words.dic
 "press <C-x> <C-k> to complete your word in words.di
 
-"behave mswin
+" backspace and cursor keys wrap to previous/next line
+set backspace=indent,eol,start whichwrap+=<,>,[,]
 
 "set diffexpr=MyDiff()
 "function MyDiff()
@@ -167,13 +168,13 @@ set nobackup
 " => Text, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use spaces instead of tabs
-"set expandtab
+set expandtab
 
 " Be smart when using tabs ;)
 set smarttab
-" 1 tab == 4 spaces
 set shiftwidth=4
-set tabstop=4
+set tabstop=8
+set softtabstop=4
 " Linebreak on 500 characters
 "set lbr
 "set tw=500
@@ -204,10 +205,10 @@ nmap <F7> :cn<cr>
 
 
 " Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+"map <C-j> <C-W>j
+"map <C-k> <C-W>k
+"map <C-h> <C-W>h
+"map <C-l> <C-W>l
 
 nmap ,s :source $MYVIMRC<CR>
 nmap ,e :e $MYVIMRC<CR>
@@ -336,8 +337,14 @@ else
 endif
 
 ""----------------------------------------------------
-""Requires plugin/NERD_commenter.vim
+""Requires plugin/minibufexpl.vim
 ""----------------------------------------------------
+" use <C-h><C-j><C-k><C-l> to navigate frames.
+let g:miniBufExplMapWindowNavVim = 1
+" use <C-arrow> to navigate frames.
+"let g:miniBufExplMapWindowNavArrows = 1
+let g:miniBufExplMapCTabSwitchBufs = 1
+let g:miniBufExplModSelTarget = 1
 """----------------------------------------------------
 """		  neocomplcache.vim
 """----------------------------------------------------
@@ -418,7 +425,7 @@ set shortmess=atI
 " fold {{{
 "用空格键来开关折叠
 nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc':'zo')<CR>
-"set foldenable
+set foldenable
 set fdm=indent
 "don't autofold anything (but I can still fold manually)
 "set foldlevel=100

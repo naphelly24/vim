@@ -1,4 +1,9 @@
-set nocompatible
+set nocompatible " Use Vim settings, rather than VI settings. This must be first, because it changes other options as a side effect.
+if has("win32")
+  let $VIMFILES = $VIM.'/vimfiles'
+else
+  let $VIMFILES = $HOME.'/.vim'
+endif
 set rtp+=$VIM\vimfiles\vundle
 "set rtp+=~/.vim/vundle
 "call vundle#rc()
@@ -47,36 +52,10 @@ set rtp+=$VIM\vimfiles\vundle
 "
 "source $VIMRUNTIME/vimrc_example.vim
 source $VIMRUNTIME/mswin.vim
+
 "set dictionary=$VIM/words.dic
 "press <C-x> <C-k> to complete your word in words.di
 
-" backspace and cursor keys wrap to previous/next line
-set backspace=indent,eol,start whichwrap+=<,>,[,]
-
-"set diffexpr=MyDiff()
-"function MyDiff()
- "let opt = '-a --binary '
- "if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
- "if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
- "let arg1 = v:fname_in
- "if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
- "let arg2 = v:fname_new
- "if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
- "let arg3 = v:fname_out
- "if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
- "let eq = ''
- "if $VIMRUNTIME =~ ' '
-   "if &sh =~ '\<cmd'
-	 "let cmd = '""' . $VIMRUNTIME . '\diff"'
-	 "let eq = '"'
-   "else
-	 "let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-   "endif
- "else
-   "let cmd = $VIMRUNTIME . '\drff'
- "endif
- "silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
-"endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
@@ -107,15 +86,16 @@ language messages zh_CN.utf-8
 if has('win32') || has('win64')
     set guifont =Consolas:h10:h12
     "set guifontwide=SimSun:h10:h12
-	set guifontwide=Microsoft\ YaHei:h10:h12
+    set guifontwide=Microsoft\ YaHei:h10:h12
     nmap ml :set guifont =Consolas:h16<CR>:set guifontwide=SimSun:h16<CR>
     nmap mn :set guifont =Consolas:h12<CR>:set guifontwide=SimSun:h12<CR>
     nmap ms :set guifont =Consolas:h10<CR>:set guifontwide=SimSun:h10<CR>
 elseif has('mac')
-    set guifont =Monaco:h12<CR>
-    nmap ml :set guifont =Monaco:h12<CR>
-    nmap mn :set guifont =Monaco:h15<CR>
-    nmap ms :set guifont =Monaco:h17<CR>
+    if getfontname( "Bitstream_Vera_Sans_Mono" ) != ""
+        set guifont=Bitstream\ Vera\ Sans\ Mono:h13
+    elseif getfontname( "DejaVu\ Sans\ Mono" ) != ""
+        set guifont=DejaVu\ Sans\ Mono:h13
+    endif
 else
     set guifont =YaHei\ Consolas\ Hybrid\ 13
     "nmap mf :set guifont =YaHei\ Consolas\ Hybrid:h15<CR>
@@ -130,19 +110,14 @@ filetype indent on
 filetype plugin on
 "" Set 3 lines to the cursor - when moving vertically using j/k
 set scrolloff=3
-set go=
-set go+=r
-set go+=R
-""隐藏工具栏set guioptions-=T
-""隐藏菜单栏set guioptions-=m
-""隐藏左边滚动条 set guioptions-=l set guioptions-=L
-""隐藏右边滚动条 set guioptions-=r set guioptions-=R
 set ignorecase
 set smartcase
 set hlsearch
 set incsearch
 set magic
 set showmatch
+set colorcolumn=80
+hi colorcolumn guibg=lightgreen
 "" No annoying sound on errors
 set noerrorbells
 set novisualbell
@@ -163,9 +138,14 @@ set nobackup
 "setlocal noswapfile
 "set bufhidden=hide
 
+" persistent undo
+set undofile
+set undodir=$VIMFILES/\_undodir " you should create _undodir first!
+set undolevels=1000 "maximum number of changes that can be undone
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Text, tab and indent related
+" => Text edit, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use spaces instead of tabs
 set expandtab
@@ -173,7 +153,7 @@ set expandtab
 " Be smart when using tabs ;)
 set smarttab
 set shiftwidth=4
-set tabstop=8
+set tabstop=4
 set softtabstop=4
 " Linebreak on 500 characters
 "set lbr
@@ -183,6 +163,13 @@ set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
 set nu "line number
+
+" backspace and cursor keys wrap to previous/next line
+set backspace=indent,eol,start whichwrap+=<,>,[,]
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => key mapping
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "quick windows operation
 nmap qq :quit<CR>
 nmap sp :sp<CR>
@@ -203,6 +190,12 @@ nmap <CR> $a<CR><Esc>
 nmap <F6> :cp<cr>
 nmap <F7> :cn<cr>
 
+" VimTip 329: A map for swapping words
+" http://vim.sourceforge.net/tip_view.php?tip_id=
+" Then when you put the cursor on or in a word, press "\sw", and
+" the word will be swapped with the next word.  The words may
+" even be separated by punctuation (such as "abc = def").
+nnoremap <unique> <silent><leader>sw "_yiw:s/\(\%#\w\+\)\(\W\+\)\(\w\+\)/\3\2\1/<cr><c-o>
 
 " Smart way to move between windows
 "map <C-j> <C-W>j
@@ -213,18 +206,6 @@ nmap <F7> :cn<cr>
 nmap ,s :source $MYVIMRC<CR>
 nmap ,e :e $MYVIMRC<CR>
 
-"Windows size initially
-if has('gui_running') && has('win32')
-	"maximize the window
-    "au GUIENTER * simalt ~x
-    "winpos 0 0
-    set lines=30
-    set columns=100
-else
-    winpos 0 0
-    set lines=120
-    set columns=200
-endif
 
 "automatically change directory, important for nerdtree plugin
 "This setting conflicts with many plugins
@@ -232,11 +213,21 @@ set bsdir=buffer
 set autochdir
 
 
-"set cmdline height to 2, which looks cool
-set cmdheight=2
-"set status bar
+" ------------------------------------------------------------------
+" Desc: Vim UI
+" ------------------------------------------------------------------
+
+set wildmenu " turn on wild menu, try typing :h and press <Tab>
+set showcmd	" display incomplete commands
+set ruler " show the cursor position all the time
+"set hid " allow to change buffer without saving
+set shortmess=atI " shortens messages to avoid 'press a key' prompt and no ad when launch vim
+set lazyredraw " do not redraw while executing macros (much faster)
+"set display+=lastline " for easy browse last line with wrap text
+set cmdheight=2 "set cmdline height to 2, which looks cool
 set laststatus=2            " show status bar (default is 1, can not display status bar)
-set statusline=%f\ %m\ %r\ \ \ ASCII=\%b,HEX=\%B\ \ \ %=\ln:%-03l/%-03L\ col:%-03c\ %p%%\ \ \ %{strftime(\"%Y-%m-%d\ %H:%M\")}
+"set status bar
+set statusline=%F\ %m\ %r\ \ \ ASCII=%b,HEX=%B\ \ \ %=line:%-03l/%-03L\ col:%-03c\ %p%%\ \ \ %{strftime(\"%Y-%m-%d\ %H:%M\")}
 " information of status bar：
 " %F   file name
 " %m   modify status
@@ -253,9 +244,31 @@ set statusline=%f\ %m\ %r\ \ \ ASCII=\%b,HEX=\%B\ \ \ %=\ln:%-03l/%-03L\ col:%-0
 " %%    %
 " %L    total line numbers
 
+"Windows size initially
+if has('gui_running') && has('win32')
+    "maximize the window
+    "au GUIENTER * simalt ~x
+    "winpos 0 0
+    set lines=30
+    set columns=100
+else
+    winpos 0 0
+    set lines=120
+    set columns=200
+endif
+
+set showfulltag " show tag with function prototype
+set go=
+set go+=r
+set go+=R
+""隐藏工具栏set guioptions-=T
+""隐藏菜单栏set guioptions-=m
+""隐藏左边滚动条 set guioptions-=l set guioptions-=L
+""隐藏右边滚动条 set guioptions-=r set guioptions-=R
+
 
 " <F10> delete space at end
-map <F10> :call HandleSpace()<CR>
+map <leader><space> :call HandleSpace()<CR>
 func! HandleSpace()
 	:%s/\s\+$//
 " replace tab with spaces
@@ -270,13 +283,13 @@ if has('mac') && has('gui_running')
 else
    nmap ts : call libcallnr("vimtweak.dll", "SetAlpha", 190)<CR>
    nmap Ts : call libcallnr("vimtweak.dll", "SetAlpha", 255)<CR>
-   nmap <F11> <Esc>:call libcallnr("vimtweak.dll", "EnableMaximize", 1)<CR>
-   nmap <F12> <Esc>:call libcallnr("vimtweak.dll", "EnableMaximize", 0)<CR>
+"   nmap <F11> <Esc>:call libcallnr("vimtweak.dll", "EnableMaximize", 1)<CR>
+"   nmap <F12> <Esc>:call libcallnr("vimtweak.dll", "EnableMaximize", 0)<CR>
 endif
 ""Use F11 to fullscreen just like in UNIX
 "map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
 
-"字符统计函数  
+"字符统计函数
 "g<C-g> vim已自带
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -315,6 +328,12 @@ elseif has('mac')
     nmap sh :ConqueTerm bash<CR>
 endif
 
+"----------------------------------------------------
+"Requires /ftplugin/python_pydiction.vim
+"Requires /ftplugin/pydiction
+"----------------------------------------------------
+let g:pydiction_location = '$VIM\vimfiles\ftplugin\pydiction\complete-dict'
+
 ""----------------------------------------------------
 ""Requires /plugin/nerdcommenter.vim
 ""----------------------------------------------------
@@ -348,53 +367,71 @@ let g:miniBufExplModSelTarget = 1
 """----------------------------------------------------
 """		  neocomplcache.vim
 """----------------------------------------------------
-"" Disable AutoComplPop.
-""let g:acp_enableAtStartup = 0
-"" Use neocomplcache.
-"let g:neocomplcache_enable_at_startup = 1
-"" Use smartcase.
-"let g:neocomplcache_enable_smart_case = 1
-"" Use camel case completion.
-"let g:neocomplcache_enable_camel_case_completion = 1
-"" Use underbar completion.
-"let g:neocomplcache_enable_underbar_completion = 1
-"" Set minimum syntax keyword length.
-"let g:neocomplcache_min_syntax_length = 3
-""let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-"
-"" Recommended key-mappings.
-"" <CR>: close popup and save indent.
-""inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
-"" <TAB>: completion.
-""inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-"" <C-h>, <BS>: close popup and delete backword char.
-""inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-""inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-""inoremap <expr><C-y>  neocomplcache#close_popup()
-""inoremap <expr><C-e>  neocomplcache#cancel_popup()
-"
-"" AutoComplPop like behavior.
-""let g:neocomplcache_enable_auto_select = 1
-"
-"
-"" Enable omni completion.
-"autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-"autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-"autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-"autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-"
-"" Enable heavy omni completion.
-"if !exists('g:neocomplcache_omni_patterns')
-"  let g:neocomplcache_omni_patterns = {}
-"endif
-"let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-""autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-"let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
-"let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplcache.
+let g:neocomplcache_enable_at_startup = 1
+" Use smartcase.
+let g:neocomplcache_enable_smart_case = 1
+" Use camel case completion.
+let g:neocomplcache_enable_camel_case_completion = 1
+" Use underbar completion.
+let g:neocomplcache_enable_underbar_completion = 1
+" Set minimum syntax keyword length.
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 
+" Define dictionary.
+let g:neocomplcache_dictionary_filetype_lists = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+    \ }
 
+" Define keyword.
+if !exists('g:neocomplcache_keyword_patterns')
+    let g:neocomplcache_keyword_patterns = {}
+endif
+let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplcache#undo_completion()
+inoremap <expr><C-l>     neocomplcache#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
+
+" AutoComplPop like behavior.
+"let g:neocomplcache_enable_auto_select = 1
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplcache_enable_auto_select = 1
+"let g:neocomplcache_disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<TAB>"
+"inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+
+""------------------------------------------------------------
+""                     vimwiki
+""------------------------------------------------------------
+let g:vimwiki_use_mouse = 1
+let g:vimwiki_list = [{'path': 'D:/vimwiki/',
+\ 'path_html': 'D:/vimwiki/html/',
+\ 'html_header': 'D:/vimwiki/template/header.tpl',}]
+
+""------------------------------------------------------------
+""                     tasklist
+""------------------------------------------------------------
+let g:tlTokenList = ['todo', 'TODO', 'FIXME', 'fixme']
+""------------------------------------------------------------
 ""other useful settings
 ""------------------------------------------------------------
 ""define and highlight in your way
@@ -410,7 +447,6 @@ let g:miniBufExplModSelTarget = 1
 ""cursor tracking (this feature gives quite a slowdown when scrolling through the file)
 "set cursorcolumn
 "set cursorline
-set cc=80
 ""------------------------------------------------------------
 ""use mouse anywhere in the window
 "if has('mouse')
@@ -419,14 +455,11 @@ set cc=80
 "	set selectmode=mouse,key
 "endif
 "
-"" no ad when launch vim
-set shortmess=atI
 
 " fold {{{
 "用空格键来开关折叠
 nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc':'zo')<CR>
 set foldenable
-set fdm=indent
 "don't autofold anything (but I can still fold manually)
 "set foldlevel=100
 "set foldopen -=search don't open folds when search into them
@@ -435,12 +468,12 @@ set fdm=indent
 "去除空行
 "set foldexpr=getline(v:lnum)=~'\\S'&&getline(v:lnum-1)!~'\\S'?'>1':'='
 "au FileType fuck set fdm=expr | foldexpr=getline(v:lnum)=~'^\\S!'&&getline(v:lnum-1)!~'\\S'?'>1':'='
-"au FileType txt,vim,lisp set fdm=expr | set fde=getline(v\:lnum)=~'.'?1:0
-			"\ | set foldtext=foldtext().v:folddashes.getline(v:foldstart+1)
-			"\ | set foldcolumn=1
-"au FileType cpp,c,java set foldmethod=syntax | set foldcolumn=2
-"au FileType perl,tex,php,html,css,sh set foldmethod=indent
-			"\ | set foldcolumn=2
+au FileType txt,vim,lisp set fdm=expr | set fde=getline(v\:lnum)=~'.'?1:0
+			\ | set foldtext=foldtext().v:folddashes.getline(v:foldstart+1)
+			\ | set foldcolumn=1
+au FileType cpp,c,java set foldmethod=syntax | set foldcolumn=2
+au FileType python,perl,tex,php,html,css,sh set foldmethod=indent
+			\ | set foldcolumn=2
 "nmap <leader>fc :set foldcolumn=1<cr>
 "nmap <leader>fC :set foldcolumn=0<cr>
 "}}}

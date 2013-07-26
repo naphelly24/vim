@@ -4,17 +4,24 @@ if has("win32")
 else
   let $VIMFILES = $HOME.'/.vim'
 endif
-set rtp+=$VIM\vimfiles\vundle
+set rtp+=$VIMFILES\vundle
 "set rtp+=~/.vim/vundle
-"call vundle#rc()
+call vundle#rc($VIMFILES.'/vundle_plugins')
 " let Vundle manage Vundle, required!
-"Bundle 'gmarik/vundle'
+Bundle 'gmarik/vundle'
 " Powerline
-"Bundle 'Lokaltog/vim-powerline'
+Bundle 'Lokaltog/vim-powerline'
 " Better file browser
 "Bundle 'scrooloose/nerdtree'
 " Code commenter
-"Bundle 'scrooloose/nerdcommenter'
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'garbas/vim-snipmate'
+Bundle 'TaskList.vim'
+" PEP8 and python-flakes checker
+Bundle 'pyflakes.vim'
+Bundle 'nvie/vim-flake8'
+Bundle 'fs111/pydoc.vim'
+
 " color scheme explorer
 "Bundle 'sjas/csExplorer'
 " code completion
@@ -22,10 +29,6 @@ set rtp+=$VIM\vimfiles\vundle
 " Python and PHP Debugger
 "Bundle 'fisadev/vim-debug.vim'
 " Search and read python documentation
-"Bundle 'fs111/pydoc.vim'
-" PEP8 and python-flakes checker
-
-"Bundle 'nvie/vim-flake8'
 " Code and files fuzzy finder
 "Bundle 'kien/ctrlp.vim'
 " Git integration
@@ -34,8 +37,6 @@ set rtp+=$VIM\vimfiles\vundle
 " Bundles from vim-scripts repos
 " Autocompletition
 "Bundle 'AutoComplPop'
-" Python code checker
-"Bundle 'pyflakes.vim'
 " Search results counter
 "Bundle 'IndexedSearch'
 " XML/HTML tags navigation
@@ -62,6 +63,8 @@ source $VIMRUNTIME/mswin.vim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable syntax highlighting
 syntax on
+filetype indent on
+filetype plugin indent on
 "syntax enable
 colorscheme molokai
 "set background=dark
@@ -106,8 +109,6 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set history=700
 set autoread
-filetype indent on
-filetype plugin on
 "" Set 3 lines to the cursor - when moving vertically using j/k
 set scrolloff=3
 set ignorecase
@@ -185,7 +186,7 @@ nmap \= yypVr=
 nmap \- yypVr-
 "nmap -- yypVr-0
 "Make <CR> insert a new line in normal mode
-nmap <CR> $a<CR><Esc>
+"nmap <CR> $a<CR><Esc>
 ""handle quickfix window
 nmap <F6> :cp<cr>
 nmap <F7> :cn<cr>
@@ -226,8 +227,10 @@ set lazyredraw " do not redraw while executing macros (much faster)
 "set display+=lastline " for easy browse last line with wrap text
 set cmdheight=2 "set cmdline height to 2, which looks cool
 set laststatus=2            " show status bar (default is 1, can not display status bar)
-"set status bar
-set statusline=%F\ %m\ %r\ \ \ ASCII=%b,HEX=%B\ \ \ %=line:%-03l/%-03L\ col:%-03c\ %p%%\ \ \ %{strftime(\"%Y-%m-%d\ %H:%M\")}
+
+
+"set status bar (uncomment the next line, if don't use powerline)
+"set statusline=%F\ %m\ %r\ \ \ ASCII=%b,HEX=%B\ \ \ %=line:%-03l/%-03L\ col:%-03c\ %p%%\ \ \ %{strftime(\"%Y-%m-%d\ %H:%M\")}
 " information of status bar：
 " %F   file name
 " %m   modify status
@@ -432,6 +435,10 @@ let g:vimwiki_list = [{'path': 'D:/vimwiki/',
 ""------------------------------------------------------------
 let g:tlTokenList = ['todo', 'TODO', 'FIXME', 'fixme']
 ""------------------------------------------------------------
+""                     pyflakes
+""------------------------------------------------------------
+let g:pyflakes_use_quickfix = 0  " do not use quick fix window
+""------------------------------------------------------------
 ""other useful settings
 ""------------------------------------------------------------
 ""define and highlight in your way
@@ -459,7 +466,7 @@ let g:tlTokenList = ['todo', 'TODO', 'FIXME', 'fixme']
 " fold {{{
 "用空格键来开关折叠
 nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc':'zo')<CR>
-set foldenable
+"set foldenable
 "don't autofold anything (but I can still fold manually)
 "set foldlevel=100
 "set foldopen -=search don't open folds when search into them
@@ -468,12 +475,12 @@ set foldenable
 "去除空行
 "set foldexpr=getline(v:lnum)=~'\\S'&&getline(v:lnum-1)!~'\\S'?'>1':'='
 "au FileType fuck set fdm=expr | foldexpr=getline(v:lnum)=~'^\\S!'&&getline(v:lnum-1)!~'\\S'?'>1':'='
-au FileType txt,vim,lisp set fdm=expr | set fde=getline(v\:lnum)=~'.'?1:0
-			\ | set foldtext=foldtext().v:folddashes.getline(v:foldstart+1)
-			\ | set foldcolumn=1
-au FileType cpp,c,java set foldmethod=syntax | set foldcolumn=2
-au FileType python,perl,tex,php,html,css,sh set foldmethod=indent
-			\ | set foldcolumn=2
+"au FileType txt,vim,lisp set fdm=expr | set fde=getline(v\:lnum)=~'.'?1:0
+			"\ | set foldtext=foldtext().v:folddashes.getline(v:foldstart+1)
+			"\ | set foldcolumn=1
+"au FileType cpp,c,java set foldmethod=syntax | set foldcolumn=2
+"au FileType python,perl,tex,php,html,css,sh set foldmethod=indent
+			"\ | set foldcolumn=2
 "nmap <leader>fc :set foldcolumn=1<cr>
 "nmap <leader>fC :set foldcolumn=0<cr>
 "}}}

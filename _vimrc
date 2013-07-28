@@ -4,6 +4,8 @@ if has("win32")
 else
   let $VIMFILES = $HOME.'/.vim'
 endif
+
+" NOTE: comments after Bundle command are not allowed..
 set rtp+=$VIMFILES\vundle
 "set rtp+=~/.vim/vundle
 call vundle#rc($VIMFILES.'/vundle_plugins')
@@ -15,48 +17,50 @@ Bundle 'Lokaltog/vim-powerline'
 "Bundle 'scrooloose/nerdtree'
 " Code commenter
 Bundle 'scrooloose/nerdcommenter'
+
+" vim-snipmate needs vim-addon-mw-utils and tlib-vim
+Bundle "MarcWeber/vim-addon-mw-utils"
+Bundle "tomtom/tlib_vim"
 Bundle 'garbas/vim-snipmate'
+
 Bundle 'TaskList.vim'
 " PEP8 and python-flakes checker
 Bundle 'pyflakes.vim'
 Bundle 'nvie/vim-flake8'
 Bundle 'fs111/pydoc.vim'
 
+Bundle 'minibufexpl.vim'
+
+"TODO: get it done some day!!!
+"Bundle 'Valloric/YouCompleteMe'
+
+" Search results counter
+Bundle 'IndexedSearch'
+
+"Bundle 'tpope/vim-fugitive'
+"Bundle 'tpope/vim-surround'
+"Bundle 'tpope/vim-git'
+"Bundle 'ervandew/supertab'
+"Bundle 'wincent/Command-T'
+"Bundle 'sjl/gundo.vim'
+"Bundle 'alfredodeza/pytest.vim'
+"Bundle 'reinh/vim-makegreen'
+"Bundle 'scrooloose/nerdtree'
+
+Bundle 'vimwiki'
 " color scheme explorer
 "Bundle 'sjas/csExplorer'
-" code completion
-"Bundle 'Shougo/neocomplcache'
 " Python and PHP Debugger
 "Bundle 'fisadev/vim-debug.vim'
-" Search and read python documentation
 " Code and files fuzzy finder
-"Bundle 'kien/ctrlp.vim'
-" Git integration
-"Bundle 'motemen/git-vim'
+Bundle 'kien/ctrlp.vim'
 
-" Bundles from vim-scripts repos
-" Autocompletition
-"Bundle 'AutoComplPop'
-" Search results counter
-"Bundle 'IndexedSearch'
 " XML/HTML tags navigation
 "Bundle 'matchit.zip'
-" vimwiki
-"Bundle 'vimwiki'
-" Brief help
-" :BundleList          - list configured bundles
-" :BundleInstall(!)    - install(update) bundles
-" :BundleSearch(!) foo - search(or refresh cache first) for foo
-" :BundleClean(!)      - confirm(or auto-approve) removal of unused bundles
-" NOTE: comments after Bundle command are not allowed..
 "
 "
 "source $VIMRUNTIME/vimrc_example.vim
 source $VIMRUNTIME/mswin.vim
-
-"set dictionary=$VIM/words.dic
-"press <C-x> <C-k> to complete your word in words.di
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
@@ -89,7 +93,7 @@ language messages zh_CN.utf-8
 if has('win32') || has('win64')
     set guifont =Consolas:h10:h12
     "set guifontwide=SimSun:h10:h12
-    set guifontwide=Microsoft\ YaHei:h10:h12
+    "set guifontwide=Microsoft\ YaHei:h10:h12
     nmap ml :set guifont =Consolas:h16<CR>:set guifontwide=SimSun:h16<CR>
     nmap mn :set guifont =Consolas:h12<CR>:set guifontwide=SimSun:h12<CR>
     nmap ms :set guifont =Consolas:h10<CR>:set guifontwide=SimSun:h10<CR>
@@ -171,11 +175,10 @@ set backspace=indent,eol,start whichwrap+=<,>,[,]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => key mapping
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"quick windows operation
-nmap qq :quit<CR>
-nmap sp :sp<CR>
-nmap vs :vsp<CR>
+"" use Ctrl+g to escape in insert mode
+inoremap <C-g> <Esc>
 "nmap ol :only<CR>
+
 " replace a word with the word in default register
 nmap \r hpl"pdw
 
@@ -191,14 +194,7 @@ nmap \- yypVr-
 nmap <F6> :cp<cr>
 nmap <F7> :cn<cr>
 
-" VimTip 329: A map for swapping words
-" http://vim.sourceforge.net/tip_view.php?tip_id=
-" Then when you put the cursor on or in a word, press "\sw", and
-" the word will be swapped with the next word.  The words may
-" even be separated by punctuation (such as "abc = def").
-nnoremap <unique> <silent><leader>sw "_yiw:s/\(\%#\w\+\)\(\W\+\)\(\w\+\)/\3\2\1/<cr><c-o>
-
-" Smart way to move between windows
+" Smart way to move between windows (included in minibufexpl.vim)
 "map <C-j> <C-W>j
 "map <C-k> <C-W>k
 "map <C-h> <C-W>h
@@ -217,7 +213,6 @@ set autochdir
 " ------------------------------------------------------------------
 " Desc: Vim UI
 " ------------------------------------------------------------------
-
 set wildmenu " turn on wild menu, try typing :h and press <Tab>
 set showcmd	" display incomplete commands
 set ruler " show the cursor position all the time
@@ -225,8 +220,8 @@ set ruler " show the cursor position all the time
 set shortmess=atI " shortens messages to avoid 'press a key' prompt and no ad when launch vim
 set lazyredraw " do not redraw while executing macros (much faster)
 "set display+=lastline " for easy browse last line with wrap text
-set cmdheight=2 "set cmdline height to 2, which looks cool
-set laststatus=2            " show status bar (default is 1, can not display status bar)
+set cmdheight=2 "set cmdline height to 2
+set laststatus=2 " show status bar (default is 1, can not display status bar)
 
 
 "set status bar (uncomment the next line, if don't use powerline)
@@ -293,8 +288,24 @@ endif
 "map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
 
 "字符统计函数
-"g<C-g> vim已自带
+"g<C-g> vim自带
 
+""------------------------------------------------------------
+""other useful settings
+""------------------------------------------------------------
+""define and highlight in your way
+"highlight MyGroup ctermbg=red guibg=red ctermfg=yellow guifg=yellow term=bold
+"match MyGroup /test/
+	""ctermbg : Background color in console
+	""guibg : Background color in Gvim
+	""ctermfg : Text color in console
+	""guifg : Text color in Gvim
+	""gui : Font formatting in Gvim
+	""term : Font formatting in console (for example, bold)
+"------------------------------------------------------------
+""cursor tracking (this feature gives quite a slowdown when scrolling through the file)
+"set cursorcolumn
+"set cursorline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 ""Advanced Setting, .vim plugin needed
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -367,60 +378,6 @@ let g:miniBufExplMapWindowNavVim = 1
 "let g:miniBufExplMapWindowNavArrows = 1
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplModSelTarget = 1
-"""----------------------------------------------------
-"""		  neocomplcache.vim
-"""----------------------------------------------------
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplcache.
-let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
-let g:neocomplcache_enable_smart_case = 1
-" Use camel case completion.
-let g:neocomplcache_enable_camel_case_completion = 1
-" Use underbar completion.
-let g:neocomplcache_enable_underbar_completion = 1
-" Set minimum syntax keyword length.
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-
-" Define dictionary.
-let g:neocomplcache_dictionary_filetype_lists = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-    \ }
-
-" Define keyword.
-if !exists('g:neocomplcache_keyword_patterns')
-    let g:neocomplcache_keyword_patterns = {}
-endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-inoremap <expr><C-l>     neocomplcache#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
-
-" AutoComplPop like behavior.
-"let g:neocomplcache_enable_auto_select = 1
-
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplcache_enable_auto_select = 1
-"let g:neocomplcache_disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<TAB>"
-"inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
 
 ""------------------------------------------------------------
 ""                     vimwiki
@@ -438,56 +395,4 @@ let g:tlTokenList = ['todo', 'TODO', 'FIXME', 'fixme']
 ""                     pyflakes
 ""------------------------------------------------------------
 let g:pyflakes_use_quickfix = 0  " do not use quick fix window
-""------------------------------------------------------------
-""other useful settings
-""------------------------------------------------------------
-""define and highlight in your way
-"highlight MyGroup ctermbg=red guibg=red ctermfg=yellow guifg=yellow term=bold
-"match MyGroup /test/
-	""ctermbg : Background color in console
-	""guibg : Background color in Gvim
-	""ctermfg : Text color in console
-	""guifg : Text color in Gvim
-	""gui : Font formatting in Gvim
-	""term : Font formatting in console (for example, bold)
-"------------------------------------------------------------
-""cursor tracking (this feature gives quite a slowdown when scrolling through the file)
-"set cursorcolumn
-"set cursorline
-""------------------------------------------------------------
-""use mouse anywhere in the window
-"if has('mouse')
-"	set mouse=a
-"	set selection=exclusive
-"	set selectmode=mouse,key
-"endif
-"
 
-" fold {{{
-"用空格键来开关折叠
-nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc':'zo')<CR>
-"set foldenable
-"don't autofold anything (but I can still fold manually)
-"set foldlevel=100
-"set foldopen -=search don't open folds when search into them
-"set foldopen -=undo
-"fdm=expr: fde=getline(v\:lnum)=~'.'?1\:0: foldtext=foldtext().v\:folddashes.getline(v\:foldstart+1): foldcolumn=2
-"去除空行
-"set foldexpr=getline(v:lnum)=~'\\S'&&getline(v:lnum-1)!~'\\S'?'>1':'='
-"au FileType fuck set fdm=expr | foldexpr=getline(v:lnum)=~'^\\S!'&&getline(v:lnum-1)!~'\\S'?'>1':'='
-"au FileType txt,vim,lisp set fdm=expr | set fde=getline(v\:lnum)=~'.'?1:0
-			"\ | set foldtext=foldtext().v:folddashes.getline(v:foldstart+1)
-			"\ | set foldcolumn=1
-"au FileType cpp,c,java set foldmethod=syntax | set foldcolumn=2
-"au FileType python,perl,tex,php,html,css,sh set foldmethod=indent
-			"\ | set foldcolumn=2
-"nmap <leader>fc :set foldcolumn=1<cr>
-"nmap <leader>fC :set foldcolumn=0<cr>
-"}}}
-
-
-"" This is useful when two lines is combined without a space
-"map <leader>j gJdw
-
-"" use jj to escape in insert mode
-"inoremap jj <Esc>

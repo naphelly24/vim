@@ -13,6 +13,7 @@ call vundle#rc($VIMFILES.'/vundle_plugins')
 Bundle 'gmarik/vundle'
 " Powerline
 Bundle 'Lokaltog/vim-powerline'
+"Bundle 'bling/vim-airline'
 " Better file browser
 "Bundle 'scrooloose/nerdtree'
 " Code commenter
@@ -25,11 +26,12 @@ Bundle 'garbas/vim-snipmate'
 
 Bundle 'TaskList.vim'
 " PEP8 and python-flakes checker
-Bundle 'pyflakes.vim'
+"Bundle 'pyflakes.vim' " vim-flake8 supersedes this.
 Bundle 'nvie/vim-flake8'
-Bundle 'fs111/pydoc.vim'
 
 Bundle 'minibufexpl.vim'
+Bundle 'a.vim'
+
 
 "TODO: get it done some day!!!
 "Bundle 'Valloric/YouCompleteMe'
@@ -37,6 +39,7 @@ Bundle 'minibufexpl.vim'
 " Search results counter
 Bundle 'IndexedSearch'
 
+Bundle 'taglist.vim'
 "Bundle 'tpope/vim-fugitive'
 "Bundle 'tpope/vim-surround'
 "Bundle 'tpope/vim-git'
@@ -191,8 +194,8 @@ nmap \- yypVr-
 "Make <CR> insert a new line in normal mode
 "nmap <CR> $a<CR><Esc>
 ""handle quickfix window
-nmap <F6> :cp<cr>
-nmap <F7> :cn<cr>
+"nmap <F6> :cp<cr>
+"nmap <F7> :cn<cr>
 
 " Smart way to move between windows (included in minibufexpl.vim)
 "map <C-j> <C-W>j
@@ -352,6 +355,7 @@ let g:pydiction_location = '$VIM\vimfiles\ftplugin\pydiction\complete-dict'
 ""Requires /plugin/nerdcommenter.vim
 ""----------------------------------------------------
 let NERDCompactSexyComs=1
+
 ""----------------------------------------------------
 ""Requires /plugin/NERD_tree.vim
 ""		  /nerdtree_plugin/*.vim

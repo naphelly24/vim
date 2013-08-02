@@ -19,10 +19,12 @@ Bundle 'Lokaltog/vim-powerline'
 " Code commenter
 Bundle 'scrooloose/nerdcommenter'
 
-" vim-snipmate needs vim-addon-mw-utils and tlib-vim
-Bundle "MarcWeber/vim-addon-mw-utils"
-Bundle "tomtom/tlib_vim"
-Bundle 'garbas/vim-snipmate'
+" vim-snipmate needs vim-addon-mw-utils and tlib-vim (seems conflict with you
+" complete me
+"Bundle 'MarcWeber/vim-addon-mw-utils'
+"Bundle 'tomtom/tlib_vim'
+"Bundle 'garbas/vim-snipmate'
+"Bundle 'honza/vim-snippets'
 
 Bundle 'TaskList.vim'
 " PEP8 and python-flakes checker
@@ -34,21 +36,20 @@ Bundle 'a.vim'
 
 
 "TODO: get it done some day!!!
-"Bundle 'Valloric/YouCompleteMe'
+Bundle 'Valloric/YouCompleteMe'
 
 " Search results counter
 Bundle 'IndexedSearch'
 
 Bundle 'taglist.vim'
+Bundle 'sjl/gundo.vim'
 "Bundle 'tpope/vim-fugitive'
 "Bundle 'tpope/vim-surround'
 "Bundle 'tpope/vim-git'
 "Bundle 'ervandew/supertab'
 "Bundle 'wincent/Command-T'
-"Bundle 'sjl/gundo.vim'
 "Bundle 'alfredodeza/pytest.vim'
 "Bundle 'reinh/vim-makegreen'
-"Bundle 'scrooloose/nerdtree'
 
 Bundle 'vimwiki'
 " color scheme explorer
@@ -58,6 +59,11 @@ Bundle 'vimwiki'
 " Code and files fuzzy finder
 Bundle 'kien/ctrlp.vim'
 
+Bundle 'nerdtree'
+Bundle 'vim-easymotion'
+Bundle 'vim-multiple-cursors'
+Bundle 'vim-startify'
+Bundle 'bufexplorer.zip'
 " XML/HTML tags navigation
 "Bundle 'matchit.zip'
 "
@@ -248,10 +254,10 @@ set laststatus=2 " show status bar (default is 1, can not display status bar)
 "Windows size initially
 if has('gui_running') && has('win32')
     "maximize the window
-    "au GUIENTER * simalt ~x
-    "winpos 0 0
-    set lines=30
-    set columns=100
+    au GUIENTER * simalt ~x
+    winpos 0 0
+    "set lines=30
+    "set columns=100
 else
     winpos 0 0
     set lines=120
@@ -289,6 +295,10 @@ else
 endif
 ""Use F11 to fullscreen just like in UNIX
 "map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
+
+" set folding
+set foldmethod=indent
+set foldlevel=99 "no folding by default
 
 "字符统计函数
 "g<C-g> vim自带
@@ -398,5 +408,11 @@ let g:tlTokenList = ['todo', 'TODO', 'FIXME', 'fixme']
 ""------------------------------------------------------------
 ""                     pyflakes
 ""------------------------------------------------------------
+" remap key
+"autocmd FileType python map <buffer> <F3> :call Flake8()<CR>
 let g:pyflakes_use_quickfix = 0  " do not use quick fix window
 
+""------------------------------------------------------------
+""                     bufexplorer
+""------------------------------------------------------------
+"noremap <silent> <leader>be :BufExplorer<CR>

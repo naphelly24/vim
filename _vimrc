@@ -58,11 +58,10 @@ Bundle 'vimwiki'
 "Bundle 'fisadev/vim-debug.vim'
 " Code and files fuzzy finder
 Bundle 'kien/ctrlp.vim'
-
-Bundle 'nerdtree'
-Bundle 'vim-easymotion'
+Bundle 'scrooloose/nerdtree'
+Bundle 'Lokaltog/vim-easymotion'
 Bundle 'vim-multiple-cursors'
-Bundle 'vim-startify'
+"Bundle 'vim-startify'
 Bundle 'bufexplorer.zip'
 " XML/HTML tags navigation
 "Bundle 'matchit.zip'
@@ -187,6 +186,7 @@ set backspace=indent,eol,start whichwrap+=<,>,[,]
 "" use Ctrl+g to escape in insert mode
 inoremap <C-g> <Esc>
 "nmap ol :only<CR>
+map <F5> <Esc>:w<CR>:!python %<CR>
 
 " replace a word with the word in default register
 nmap \r hpl"pdw
@@ -216,7 +216,7 @@ nmap ,e :e $MYVIMRC<CR>
 "automatically change directory, important for nerdtree plugin
 "This setting conflicts with many plugins
 set bsdir=buffer
-set autochdir
+"set autochdir
 
 
 " ------------------------------------------------------------------
@@ -415,4 +415,4 @@ let g:pyflakes_use_quickfix = 0  " do not use quick fix window
 ""------------------------------------------------------------
 ""                     bufexplorer
 ""------------------------------------------------------------
-"noremap <silent> <leader>be :BufExplorer<CR>
+noremap <silent> <leader>be :BufExplorer<CR>

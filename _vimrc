@@ -11,11 +11,9 @@ set rtp+=$VIMFILES\vundle
 call vundle#rc($VIMFILES.'/vundle_plugins')
 " let Vundle manage Vundle, required!
 Bundle 'gmarik/vundle'
-" Powerline
 Bundle 'Lokaltog/vim-powerline'
 "Bundle 'bling/vim-airline'
-" Better file browser
-"Bundle 'scrooloose/nerdtree'
+
 " Code commenter
 Bundle 'scrooloose/nerdcommenter'
 
@@ -27,18 +25,15 @@ Bundle 'scrooloose/nerdcommenter'
 "Bundle 'honza/vim-snippets'
 
 Bundle 'TaskList.vim'
-" PEP8 and python-flakes checker
-"Bundle 'pyflakes.vim' " vim-flake8 supersedes this.
-Bundle 'nvie/vim-flake8'
 
-Bundle 'minibufexpl.vim'
+Bundle 'fs111/pydoc.vim'
+Bundle 'scrooloose/syntastic'
+
+"Bundle 'minibufexpl.vim'
 Bundle 'a.vim'
 
-
-"TODO: get it done some day!!!
 Bundle 'Valloric/YouCompleteMe'
 
-" Search results counter
 Bundle 'IndexedSearch'
 
 Bundle 'taglist.vim'
@@ -52,6 +47,7 @@ Bundle 'sjl/gundo.vim'
 "Bundle 'reinh/vim-makegreen'
 
 Bundle 'vimwiki'
+Bundle 'richardlee8681/calendar-vim'
 " color scheme explorer
 "Bundle 'sjas/csExplorer'
 " Python and PHP Debugger
@@ -65,10 +61,13 @@ Bundle 'vim-multiple-cursors'
 Bundle 'bufexplorer.zip'
 " XML/HTML tags navigation
 "Bundle 'matchit.zip'
-"
-"
-"source $VIMRUNTIME/vimrc_example.vim
-source $VIMRUNTIME/mswin.vim
+Bundle 'mru.vim'
+Bundle 'Yggdroot/indentLine'
+Bundle 'YankRing.vim'
+Bundle 'pthrasher/conqueterm-vim'
+
+
+"source $VIMRUNTIME/mswin.vim
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
@@ -129,8 +128,9 @@ set hlsearch
 set incsearch
 set magic
 set showmatch
-set colorcolumn=80
-hi colorcolumn guibg=lightgreen
+set textwidth=80
+set colorcolumn=81
+"hi colorcolumn guibg=lightgreen
 "" No annoying sound on errors
 set noerrorbells
 set novisualbell
@@ -177,19 +177,22 @@ set si "Smart indent
 set wrap "Wrap lines
 set nu "line number
 
-" backspace and cursor keys wrap to previous/next line
-set backspace=indent,eol,start whichwrap+=<,>,[,]
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => key mapping
+" => key binding
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" use Ctrl+g to escape in insert mode
 inoremap <C-g> <Esc>
-"nmap ol :only<CR>
+nmap <C-cr> :only<CR>
+" execute current python script
 map <F5> <Esc>:w<CR>:!python %<CR>
+" enter DEBUG
+imap <leader>p print "DEBUG_HERE"<CR>
+map <leader>p iprint "DEBUG_HERE"<CR>
 
 " replace a word with the word in default register
-nmap \r hpl"pdw
+nmap \r hplde
+"nmap \r hpl"pdw
 
 "quick way to add something
 "add line breaks in the next line
@@ -204,20 +207,51 @@ nmap \- yypVr-
 "nmap <F7> :cn<cr>
 
 " Smart way to move between windows (included in minibufexpl.vim)
-"map <C-j> <C-W>j
-"map <C-k> <C-W>k
-"map <C-h> <C-W>h
-"map <C-l> <C-W>l
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
 
 nmap ,s :source $MYVIMRC<CR>
 nmap ,e :e $MYVIMRC<CR>
 
-
-"automatically change directory, important for nerdtree plugin
-"This setting conflicts with many plugins
+"use cd d:\ to change dir manually
 set bsdir=buffer
-"set autochdir
+set autochdir
 
+" Set options and add mapping such that Vim behaves a lot like MS-Windows
+" Most are copied from mswin.vim
+" backspace and cursor keys wrap to previous/next line
+behave mswin
+set backspace=indent,eol,start whichwrap+=<,>,[,]
+" backspace in Visual mode deletes selection
+vnoremap <BS> d
+
+" CTRL-X and SHIFT-Del are Cut
+vnoremap <C-X> "+x
+vnoremap <S-Del> "+x
+
+" CTRL-C and CTRL-Insert are Copy
+vnoremap <C-C> "+y
+vnoremap <C-Insert> "+y
+
+" CTRL-V and SHIFT-Insert are Paste
+map <C-V>		"+gP
+map <S-Insert>		"+gP
+
+cmap <C-V>		<C-R>+
+cmap <S-Insert>		<C-R>+
+
+" Use CTRL-Q to do what CTRL-V used to do
+noremap <C-Q>		<C-V>
+
+" CTRL-A is Select all
+noremap <C-A> gggH<C-O>G
+inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
+cnoremap <C-A> <C-C>gggH<C-O>G
+onoremap <C-A> <C-C>gggH<C-O>G
+snoremap <C-A> <C-C>gggH<C-O>G
+xnoremap <C-A> <C-C>ggVG
 
 " ------------------------------------------------------------------
 " Desc: Vim UI
@@ -268,6 +302,7 @@ set showfulltag " show tag with function prototype
 set go=
 set go+=r
 set go+=R
+set go+=m
 ""隐藏工具栏set guioptions-=T
 ""隐藏菜单栏set guioptions-=m
 ""隐藏左边滚动条 set guioptions-=l set guioptions-=L
@@ -288,7 +323,7 @@ if has('mac') && has('gui_running')
    nmap ts : set transparency=11<CR>
    nmap Ts : set transparency=0<CR>
 else
-   nmap ts : call libcallnr("vimtweak.dll", "SetAlpha", 190)<CR>
+   nmap ts : call libcallnr("vimtweak.dll", "SetAlpha", 200)<CR>
    nmap Ts : call libcallnr("vimtweak.dll", "SetAlpha", 255)<CR>
 "   nmap <F11> <Esc>:call libcallnr("vimtweak.dll", "EnableMaximize", 1)<CR>
 "   nmap <F12> <Esc>:call libcallnr("vimtweak.dll", "EnableMaximize", 0)<CR>
@@ -297,8 +332,8 @@ endif
 "map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
 
 " set folding
-set foldmethod=indent
-set foldlevel=99 "no folding by default
+"set foldmethod=indent
+"set foldlevel=99 "no folding by default
 
 "字符统计函数
 "g<C-g> vim自带
@@ -355,12 +390,6 @@ elseif has('mac')
     nmap sh :ConqueTerm bash<CR>
 endif
 
-"----------------------------------------------------
-"Requires /ftplugin/python_pydiction.vim
-"Requires /ftplugin/pydiction
-"----------------------------------------------------
-let g:pydiction_location = '$VIM\vimfiles\ftplugin\pydiction\complete-dict'
-
 ""----------------------------------------------------
 ""Requires /plugin/nerdcommenter.vim
 ""----------------------------------------------------
@@ -400,19 +429,50 @@ let g:vimwiki_use_mouse = 1
 let g:vimwiki_list = [{'path': 'D:/vimwiki/',
 \ 'path_html': 'D:/vimwiki/html/',
 \ 'html_header': 'D:/vimwiki/template/header.tpl',}]
+:nmap <C-c><C-c> <Plug>VimwikiToggleListItem
+let g:vimwiki_hl_cb_checked = 1
+let g:vimwiki_menu = ''
+let g:vimwiki_folding = 'expr'
 
 ""------------------------------------------------------------
 ""                     tasklist
 ""------------------------------------------------------------
 let g:tlTokenList = ['todo', 'TODO', 'FIXME', 'fixme']
 ""------------------------------------------------------------
-""                     pyflakes
+""                     syntastic
 ""------------------------------------------------------------
-" remap key
-"autocmd FileType python map <buffer> <F3> :call Flake8()<CR>
-let g:pyflakes_use_quickfix = 0  " do not use quick fix window
-
+let g:syntastic_python_checkers = ['flake8']
+let g:syntastic_python_flake8_args='--ignore=E501, E302'
+"let g:syntastic_check_on_open=1
+let g:syntastic_always_populate_loc_list=1
+map <F7> <Esc>:w<CR>:Errors<CR>
 ""------------------------------------------------------------
 ""                     bufexplorer
 ""------------------------------------------------------------
 noremap <silent> <leader>be :BufExplorer<CR>
+
+""------------------------------------------------------------
+""                     pydoc
+""------------------------------------------------------------
+"let g:pydoc_open_cmd = 'vsplit'
+"
+""------------------------------------------------------------
+""                     ctrlp
+""------------------------------------------------------------
+let g:ctrlp_cmd = 'CtrlPMRU'
+let g:ctrlp_map = '<c-m>'
+
+""------------------------------------------------------------
+""                     PerforceBlame
+""------------------------------------------------------------
+fun! PerforceBlame()
+execute ":!python D:\\devtools\\python\\p4_introduced.py " .  bufname("%") . " " . line(".")
+endfun
+nmap ,pb :call PerforceBlame()<cr>
+
+""------------------------------------------------------------
+""                     YankRing
+""------------------------------------------------------------
+let g:yankring_replace_n_pkey = '<m-p>'
+let g:yankring_replace_n_nkey = '<m-n>'
+

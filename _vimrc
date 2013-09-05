@@ -56,7 +56,7 @@ Bundle 'richardlee8681/calendar-vim'
 Bundle 'kien/ctrlp.vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Lokaltog/vim-easymotion'
-Bundle 'vim-multiple-cursors'
+"Bundle 'vim-multiple-cursors'
 "Bundle 'vim-startify'
 Bundle 'bufexplorer.zip'
 " XML/HTML tags navigation
@@ -68,7 +68,8 @@ Bundle 'pthrasher/conqueterm-vim'
 
 
 "source $VIMRUNTIME/mswin.vim
-
+" When opening a file, jump to the last cursor position.
+autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -242,6 +243,12 @@ map <S-Insert>		"+gP
 cmap <C-V>		<C-R>+
 cmap <S-Insert>		<C-R>+
 
+exe 'inoremap <script> <C-V> <C-G>u' . paste#paste_cmd['i']
+exe 'vnoremap <script> <C-V> ' . paste#paste_cmd['v']
+
+imap <S-Insert>		<C-V>
+vmap <S-Insert>		<C-V>
+
 " Use CTRL-Q to do what CTRL-V used to do
 noremap <C-Q>		<C-V>
 
@@ -302,7 +309,6 @@ set showfulltag " show tag with function prototype
 set go=
 set go+=r
 set go+=R
-set go+=m
 ""Òþ²Ø¹¤¾ßÀ¸set guioptions-=T
 ""Òþ²Ø²Ëµ¥À¸set guioptions-=m
 ""Òþ²Ø×ó±ß¹ö¶¯Ìõ set guioptions-=l set guioptions-=L
@@ -426,14 +432,17 @@ let g:miniBufExplModSelTarget = 1
 ""                     vimwiki
 ""------------------------------------------------------------
 let g:vimwiki_use_mouse = 1
-let g:vimwiki_list = [{'path': 'D:/vimwiki/',
-\ 'path_html': 'D:/vimwiki/html/',
-\ 'html_header': 'D:/vimwiki/template/header.tpl',}]
+let g:vimwiki_list = [{'path': 'D:\SkyDrive\Documents\vimwiki',
+\ 'path_html': 'D:\SkyDrive\Documents\vimwiki\html\',
+\ 'html_header': 'D:\SkyDrive\Documents\header.tpl',},
+\ {'path': 'D:\vimwiki',
+\ 'path_html': 'D:\vimwiki\html\',}]
 :nmap <C-c><C-c> <Plug>VimwikiToggleListItem
 let g:vimwiki_hl_cb_checked = 1
 let g:vimwiki_menu = ''
 let g:vimwiki_folding = 'expr'
-
+nmap <F11> :Vimwiki2HTML<CR>
+nmap <F12> :VimwikiAll2HTML<CR>
 ""------------------------------------------------------------
 ""                     tasklist
 ""------------------------------------------------------------
@@ -449,7 +458,7 @@ map <F7> <Esc>:w<CR>:Errors<CR>
 ""------------------------------------------------------------
 ""                     bufexplorer
 ""------------------------------------------------------------
-noremap <silent> <leader>be :BufExplorer<CR>
+"noremap <silent> <leader>be :BufExplorer<CR>
 
 ""------------------------------------------------------------
 ""                     pydoc

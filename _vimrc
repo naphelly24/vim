@@ -80,20 +80,22 @@ filetype plugin indent on
 "syntax enable
 colorscheme molokai
 "set background=dark
-"handle gibberish code in text file (处理文本中显示乱码)
+"" encoding
 set encoding=utf-8
+set termencoding=utf-8
 set fileencodings=utf-8,chinese,latin-1
-"windows has a different file encoding name with other OS
-if has("win32")
+if has('win32')
     set fileencoding=chinese
 else
     set fileencoding=utf-8
 endif
-"handle gibberish code in menu & right click menu
+"set fileencodings=ucs-bom,utf-8,chinese,latin-1
+set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+set langmenu=zh_CN.utf-8
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
-"handle gibberish code in console
-language messages zh_CN.utf-8
+language messages zh_cn.utf-8
+
 " Use Unix as the standard file type
 "set ffs=unix,dos,mac
 
@@ -443,6 +445,7 @@ let g:vimwiki_menu = ''
 let g:vimwiki_folding = 'expr'
 nmap <F11> :Vimwiki2HTML<CR>
 nmap <F12> :VimwikiAll2HTML<CR>
+let g:vimwiki_w32_dir_enc = 'cp936'
 ""------------------------------------------------------------
 ""                     tasklist
 ""------------------------------------------------------------

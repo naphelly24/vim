@@ -17,14 +17,7 @@ Bundle 'Lokaltog/vim-powerline'
 " Code commenter
 Bundle 'scrooloose/nerdcommenter'
 
-" vim-snipmate needs vim-addon-mw-utils and tlib-vim (seems conflict with you
-" complete me
-"Bundle 'MarcWeber/vim-addon-mw-utils'
-"Bundle 'tomtom/tlib_vim'
-"Bundle 'garbas/vim-snipmate'
-"Bundle 'honza/vim-snippets'
-
-Bundle 'TaskList.vim'
+"Bundle 'TaskList.vim'
 
 Bundle 'fs111/pydoc.vim'
 Bundle 'scrooloose/syntastic'
@@ -32,14 +25,13 @@ Bundle 'scrooloose/syntastic'
 "Bundle 'minibufexpl.vim'
 Bundle 'a.vim'
 
-Bundle 'Valloric/YouCompleteMe'
 
 Bundle 'IndexedSearch'
 
 Bundle 'taglist.vim'
-Bundle 'sjl/gundo.vim'
+"Bundle 'sjl/gundo.vim'
 "Bundle 'tpope/vim-fugitive'
-"Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-surround'
 "Bundle 'tpope/vim-git'
 "Bundle 'ervandew/supertab'
 "Bundle 'wincent/Command-T'
@@ -53,7 +45,7 @@ Bundle 'richardlee8681/calendar-vim'
 " Python and PHP Debugger
 "Bundle 'fisadev/vim-debug.vim'
 " Code and files fuzzy finder
-Bundle 'kien/ctrlp.vim'
+"Bundle 'kien/ctrlp.vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Lokaltog/vim-easymotion'
 "Bundle 'vim-multiple-cursors'
@@ -66,7 +58,10 @@ Bundle 'Yggdroot/indentLine'
 Bundle 'YankRing.vim'
 Bundle 'pthrasher/conqueterm-vim'
 
+Bundle 'Valloric/YouCompleteMe'
 
+"code snippets
+Bundle 'drmingdrmer/xptemplate'
 "source $VIMRUNTIME/mswin.vim
 " When opening a file, jump to the last cursor position.
 autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif 
@@ -77,24 +72,22 @@ autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `
 syntax on
 filetype indent on
 filetype plugin indent on
-"syntax enable
-colorscheme molokai
+colorscheme darkZ
 "set background=dark
+
 "" encoding
 set encoding=utf-8
-set termencoding=utf-8
-set fileencodings=utf-8,chinese,latin-1
-if has('win32')
-    set fileencoding=chinese
-else
-    set fileencoding=utf-8
+set fenc=utf-8
+set fileencodings=ucs-bom,utf-8,cp936
+if has('win32') || has('win64')
+    source $VIMRUNTIME/delmenu.vim
+    source $VIMRUNTIME/menu.vim
+    language messages zh_CN.utf-8
 endif
-"set fileencodings=ucs-bom,utf-8,chinese,latin-1
-set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
-set langmenu=zh_CN.utf-8
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
-language messages zh_cn.utf-8
+if v:lang =~? '^\(zh\)\|\(ja\)\|\(ko\)'
+    set ambiwidth=double
+endif
+set nobomb
 
 " Use Unix as the standard file type
 "set ffs=unix,dos,mac
@@ -131,7 +124,7 @@ set hlsearch
 set incsearch
 set magic
 set showmatch
-set textwidth=80
+"set textwidth=80
 set colorcolumn=81
 "hi colorcolumn guibg=lightgreen
 "" No annoying sound on errors
@@ -158,7 +151,6 @@ set nobackup
 set undofile
 set undodir=$VIMFILES/\_undodir " you should create _undodir first!
 set undolevels=1000 "maximum number of changes that can be undone
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text edit, tab and indent related
@@ -194,7 +186,7 @@ imap <leader>p print "DEBUG_HERE"<CR>
 map <leader>p iprint "DEBUG_HERE"<CR>
 
 " replace a word with the word in default register
-nmap \r hplde
+nmap \r Plde
 "nmap \r hpl"pdw
 
 "quick way to add something
@@ -262,6 +254,13 @@ onoremap <C-A> <C-C>gggH<C-O>G
 snoremap <C-A> <C-C>gggH<C-O>G
 xnoremap <C-A> <C-C>ggVG
 
+" date/time info quick insert
+nnoremap <F10> "=strftime("%Y-%m-%d/%H:%M:%S")<CR>gP
+inoremap <F10> <C-R>=strftime("%Y-%m-%d/%H:%M:%S")<CR>
+
+" Set Up and Down non-linewise
+noremap <Up> gk
+noremap <Down> gj
 " ------------------------------------------------------------------
 " Desc: Vim UI
 " ------------------------------------------------------------------
@@ -278,7 +277,7 @@ set laststatus=2 " show status bar (default is 1, can not display status bar)
 
 "set status bar (uncomment the next line, if don't use powerline)
 "set statusline=%F\ %m\ %r\ \ \ ASCII=%b,HEX=%B\ \ \ %=line:%-03l/%-03L\ col:%-03c\ %p%%\ \ \ %{strftime(\"%Y-%m-%d\ %H:%M\")}
-" information of status bar£º
+" information of status barï¼š
 " %F   file name
 " %m   modify status
 " %r   is readonly?
@@ -311,13 +310,13 @@ set showfulltag " show tag with function prototype
 set go=
 set go+=r
 set go+=R
-""Òş²Ø¹¤¾ßÀ¸set guioptions-=T
-""Òş²Ø²Ëµ¥À¸set guioptions-=m
-""Òş²Ø×ó±ß¹ö¶¯Ìõ set guioptions-=l set guioptions-=L
-""Òş²ØÓÒ±ß¹ö¶¯Ìõ set guioptions-=r set guioptions-=R
+""éšè—å·¥å…·æ set guioptions-=T
+""éšè—èœå•æ set guioptions-=m
+""éšè—å·¦è¾¹æ»šåŠ¨æ¡ set guioptions-=l set guioptions-=L
+""éšè—å³è¾¹æ»šåŠ¨æ¡ set guioptions-=r set guioptions-=R
 
 
-" <F10> delete space at end
+" delete space at end
 map <leader><space> :call HandleSpace()<CR>
 func! HandleSpace()
 	:%s/\s\+$//
@@ -343,8 +342,8 @@ endif
 "set foldmethod=indent
 "set foldlevel=99 "no folding by default
 
-"×Ö·ûÍ³¼Æº¯Êı
-"g<C-g> vim×Ô´ø
+"å­—ç¬¦ç»Ÿè®¡å‡½æ•°
+"g<C-g> vimè‡ªå¸¦
 
 ""------------------------------------------------------------
 ""other useful settings
@@ -434,22 +433,24 @@ let g:miniBufExplModSelTarget = 1
 ""                     vimwiki
 ""------------------------------------------------------------
 let g:vimwiki_use_mouse = 1
-let g:vimwiki_list = [{'path': 'D:\SkyDrive\Documents\vimwiki',
-\ 'path_html': 'D:\SkyDrive\Documents\vimwiki\html\',
-\ 'html_header': 'D:\SkyDrive\Documents\header.tpl',},
-\ {'path': 'D:\vimwiki',
-\ 'path_html': 'D:\vimwiki\html\',}]
-:nmap <C-c><C-c> <Plug>VimwikiToggleListItem
+let g:vimwiki_list = [{'path': 'D:\SkyDrive\Documents\vimwiki\',
+            \ 'path_html': 'D:\SkyDrive\Documents\vimwiki\html\',
+            \ 'template_path': 'D:\SkyDrive\Documents\vimwiki\templates\',
+            \ 'template_default': 'def_template',
+            \ 'template_ext': '.html'}]
 let g:vimwiki_hl_cb_checked = 1
 let g:vimwiki_menu = ''
 let g:vimwiki_folding = 'expr'
+let g:vimwiki_w32_dir_enc = 'cp936'
+let g:vimwiki_file_exts = 'c, cpp, txt, h, hpp, zip, sh, awk, ps, pdf'
+"emacs org-mode like toggle
+nmap <C-c><C-c> <Plug>VimwikiToggleListItem
 nmap <F11> :Vimwiki2HTML<CR>
 nmap <F12> :VimwikiAll2HTML<CR>
-let g:vimwiki_w32_dir_enc = 'cp936'
 ""------------------------------------------------------------
 ""                     tasklist
 ""------------------------------------------------------------
-let g:tlTokenList = ['todo', 'TODO', 'FIXME', 'fixme']
+"let g:tlTokenList = ['todo', 'TODO', 'FIXME', 'fixme']
 ""------------------------------------------------------------
 ""                     syntastic
 ""------------------------------------------------------------
@@ -468,11 +469,16 @@ map <F7> <Esc>:w<CR>:Errors<CR>
 ""------------------------------------------------------------
 "let g:pydoc_open_cmd = 'vsplit'
 "
-""------------------------------------------------------------
-""                     ctrlp
-""------------------------------------------------------------
-let g:ctrlp_cmd = 'CtrlPMRU'
-let g:ctrlp_map = '<c-m>'
+"------------------------------------------------------------
+"                     ctrlp
+"------------------------------------------------------------
+"let g:ctrlp_cmd = 'CtrlPMRU'
+"let g:ctrlp_map = '<c-m>'
+
+"------------------------------------------------------------
+"                     calendar
+"------------------------------------------------------------
+let g:calendar_weeknm = 1 " WK01
 
 ""------------------------------------------------------------
 ""                     PerforceBlame
@@ -487,4 +493,3 @@ nmap ,pb :call PerforceBlame()<cr>
 ""------------------------------------------------------------
 let g:yankring_replace_n_pkey = '<m-p>'
 let g:yankring_replace_n_nkey = '<m-n>'
-

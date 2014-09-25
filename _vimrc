@@ -1,79 +1,72 @@
 set nocompatible " Use Vim settings, rather than VI settings. This must be first, because it changes other options as a side effect.
-if has("win32")
-  let $VIMFILES = $VIM.'/vimfiles'
-else
-  let $VIMFILES = $HOME.'/.vim'
-endif
 
+" => environment {{{
+if has("win32")
+    let $VIMFILES = $VIM.'/vimfiles'
+else
+    let $VIMFILES = $HOME.'/.vim'
+endif
+" }}}
+
+" => auto execute {{{
+" transparent the windows a little bit
+autocmd VimEnter * call libcallnr("vimtweak.dll", "SetAlpha", 250)
+" When opening a file, jump to the last cursor position.
+autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif
+" }}}
+
+" => Bundle setup {{{
 " NOTE: comments after Bundle command are not allowed..
 set rtp+=$VIMFILES\vundle
-"set rtp+=~/.vim/vundle
 call vundle#rc($VIMFILES.'/vundle_plugins')
 " let Vundle manage Vundle, required!
-Bundle 'gmarik/vundle'
-Bundle 'Lokaltog/vim-powerline'
-"Bundle 'bling/vim-airline'
+Plugin 'gmarik/vundle.vim'
 
-" Code commenter
-Bundle 'scrooloose/nerdcommenter'
+Plugin 'bling/vim-airline'
 
-"Bundle 'TaskList.vim'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'fs111/pydoc.vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'a.vim'
+Plugin 'vimwiki'
+Plugin 'richardlee8681/calendar-vim'
+Plugin 'IndexedSearch'
+Plugin 'taglist.vim'
+Plugin 'tpope/vim-surround'
+Plugin 'scrooloose/nerdtree'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'bufexplorer.zip'
+Plugin 'mru.vim'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'YankRing.vim'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'drmingdrmer/xptemplate' "code snippets
+Plugin 'Solarized'
+Plugin 'matchit.zip'
+Plugin 'kien/ctrlp.vim' " Code and files fuzzy finder
+Plugin 'gregsexton/MatchTag'
+Plugin 'oplatek/Conque-Shell'
 
-Bundle 'fs111/pydoc.vim'
-Bundle 'scrooloose/syntastic'
+"Plugin 'sjl/gundo.vim'
+"Plugin 'tpope/vim-fugitive'
+"Plugin 'wincent/Command-T'
+"Plugin 'alfredodeza/pytest.vim'
+"Plugin 'reinh/vim-makegreen'
 
-"Bundle 'minibufexpl.vim'
-Bundle 'a.vim'
-
-
-Bundle 'IndexedSearch'
-
-Bundle 'taglist.vim'
-"Bundle 'sjl/gundo.vim'
-"Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-surround'
-"Bundle 'tpope/vim-git'
-"Bundle 'ervandew/supertab'
-"Bundle 'wincent/Command-T'
-"Bundle 'alfredodeza/pytest.vim'
-"Bundle 'reinh/vim-makegreen'
-
-Bundle 'vimwiki'
-Bundle 'richardlee8681/calendar-vim'
+"Plugin 'minibufexpl.vim'
 " color scheme explorer
-"Bundle 'sjas/csExplorer'
+"Plugin 'sjas/csExplorer'
 " Python and PHP Debugger
-"Bundle 'fisadev/vim-debug.vim'
-" Code and files fuzzy finder
-"Bundle 'kien/ctrlp.vim'
-Bundle 'scrooloose/nerdtree'
-Bundle 'Lokaltog/vim-easymotion'
-"Bundle 'vim-multiple-cursors'
-"Bundle 'vim-startify'
-Bundle 'bufexplorer.zip'
-" XML/HTML tags navigation
-"Bundle 'matchit.zip'
-Bundle 'mru.vim'
-Bundle 'Yggdroot/indentLine'
-Bundle 'YankRing.vim'
-Bundle 'pthrasher/conqueterm-vim'
+"Plugin 'fisadev/vim-debug.vim'
+"Plugin 'vim-multiple-cursors'
+"Plugin 'UltiSnips'
+" }}}
 
-Bundle 'Valloric/YouCompleteMe'
-
-"code snippets
-Bundle 'drmingdrmer/xptemplate'
-"source $VIMRUNTIME/mswin.vim
-" When opening a file, jump to the last cursor position.
-autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Colors and Fonts
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Enable syntax highlighting
-syntax on
-filetype indent on
+" => Colors, Encoding and Fonts {{{
+set background=dark
+colorscheme solarized
 filetype plugin indent on
-colorscheme darkZ
-"set background=dark
+syntax on " Enable syntax highlighting
 
 "" encoding
 set encoding=utf-8
@@ -88,7 +81,6 @@ if v:lang =~? '^\(zh\)\|\(ja\)\|\(ko\)'
     set ambiwidth=double
 endif
 set nobomb
-
 " Use Unix as the standard file type
 "set ffs=unix,dos,mac
 
@@ -96,7 +88,7 @@ set nobomb
 if has('win32') || has('win64')
     set guifont =Consolas:h10:h12
     "set guifontwide=SimSun:h10:h12
-    "set guifontwide=Microsoft\ YaHei:h10:h12
+    set guifontwide=Microsoft\ YaHei:h10:h12
     nmap ml :set guifont =Consolas:h16<CR>:set guifontwide=SimSun:h16<CR>
     nmap mn :set guifont =Consolas:h12<CR>:set guifontwide=SimSun:h12<CR>
     nmap ms :set guifont =Consolas:h10<CR>:set guifontwide=SimSun:h10<CR>
@@ -110,14 +102,13 @@ else
     set guifont =YaHei\ Consolas\ Hybrid\ 13
     "nmap mf :set guifont =YaHei\ Consolas\ Hybrid:h15<CR>
 endif
+" }}}
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"" => General Settings
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set history=700
+" => General Settings {{{
+set history=256
 set autoread
-"" Set 3 lines to the cursor - when moving vertically using j/k
-set scrolloff=3
+set spell
+set scrolloff=3 " Set 3 lines to the cursor - when moving vertically using j/k
 set ignorecase
 set smartcase
 set hlsearch
@@ -127,74 +118,79 @@ set showmatch
 "set textwidth=80
 set colorcolumn=81
 "hi colorcolumn guibg=lightgreen
-"" No annoying sound on errors
-set noerrorbells
+set noerrorbells " No annoying sound on errors
 set novisualbell
 set t_vb=
 set tm=500
 set confirm
-"" share clipboard with windows
-set clipboard+=unnamed
-"set clipboard+=unnamedplus
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"" => Files, backups and undo
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"" Turn backup off
+set clipboard+=unnamed " share clipboard with windows
 set nobackup
-"set nowb
-"set noswapfile
-""disable swap file
-"setlocal noswapfile
-"set bufhidden=hide
-
 " persistent undo
 set undofile
 set undodir=$VIMFILES/\_undodir " you should create _undodir first!
-set undolevels=1000 "maximum number of changes that can be undone
+set undolevels=1000 "maximum number of changes that can be undone"
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Text edit, tab and indent related
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use spaces instead of tabs
 set expandtab
-
-" Be smart when using tabs ;)
+set listchars=tab:->,trail:-
+" Be smart when using tabs
 set smarttab
 set shiftwidth=4
 set tabstop=4
 set softtabstop=4
-" Linebreak on 500 characters
-"set lbr
-"set tw=500
 
-set ai "Auto indent
+set autoindent "Auto indent
 set si "Smart indent
-set wrap "Wrap lines
+"set wrap "Wrap lines
 set nu "line number
 
+set wildmenu " turn on wild menu, try typing :h and press <Tab>
+set showcmd	" display incomplete commands
+set ruler " show the cursor position all the time
+set hid " allow to change buffer without saving
+set shortmess=atI " shortens messages to avoid 'press a key' prompt and no ad when launch vim
+set lazyredraw " do not redraw while executing macros (much faster)
+set display+=lastline " for easy browse last line with wrap text
+set cmdheight=2 "set cmdline height to 2
+set laststatus=2 " show status bar (default is 1, can not display status bar)
+set showfulltag " show tag with function prototype
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => key binding
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set go=
+set go+=r
+set go+=R
+
+" set folding
+set foldenable
+set foldmethod=marker
+"set foldlevel=99 "no folding by default
+
+""cursor tracking (this feature gives quite a slowdown when scrolling through the file)
+"set cursorcolumn
+"set cursorline
+"hi cursorline guibg=#333333     " highlight bg color of current
+" }}}
+
+" => key binding {{{
+let mapleader = ','
 "" use Ctrl+g to escape in insert mode
 inoremap <C-g> <Esc>
 nmap <C-cr> :only<CR>
-" execute current python script
-map <F5> <Esc>:w<CR>:!python %<CR>
-" enter DEBUG
-imap <leader>p print "DEBUG_HERE"<CR>
-map <leader>p iprint "DEBUG_HERE"<CR>
 
-" replace a word with the word in default register
-nmap \r Plde
-"nmap \r hpl"pdw
+" execute current python script
+"map <F5> <Esc>:w<CR>:!python %<CR>
+
+" enter DEBUG
+"imap <leader>p print "DEBUG_HERE"<CR>
+"map <leader>p iprint "DEBUG_HERE"<CR>
+
+" replace a word with the word in default register, <C-y><C-e> is used to add some delay
+nmap <leader>r Plde<C-y><C-e><C-y><C-e><C-y><C-e>bye
 
 "quick way to add something
 "add line breaks in the next line
-nmap \= yypVr=
-"nmap == yypVr=o
-nmap \- yypVr-
-"nmap -- yypVr-0
+nmap <leader>= yypVr=
+nmap <leader>- yypVr-
+
 "Make <CR> insert a new line in normal mode
 "nmap <CR> $a<CR><Esc>
 ""handle quickfix window
@@ -207,16 +203,48 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-nmap ,s :source $MYVIMRC<CR>
-nmap ,e :e $MYVIMRC<CR>
+nmap <leader>s :source $MYVIMRC<CR>
+nmap <leader>e :e $MYVIMRC<CR>
 
-"use cd d:\ to change dir manually
 set bsdir=buffer
 set autochdir
 
-" Set options and add mapping such that Vim behaves a lot like MS-Windows
+" date/time info quick insert
+nnoremap <leader>d "=strftime("%Y-%m-%d/%H:%M:%S")<CR>gP
+inoremap <leader>d <C-R>=strftime("%Y-%m-%d/%H:%M:%S")<CR>
+
+" Set Up and Down non-linewise
+noremap k gk
+noremap j gj
+
+" enter <br> in insert mode
+imap <S-CR> <br><CR>
+
+" delete space at end
+map <leader><space> :call HandleSpace()<CR>
+func! HandleSpace()
+	:%s/\s\+$//
+endfunc
+
+" Code folding options
+nmap <leader>f0 :set foldlevel=0<CR>
+nmap <leader>f1 :set foldlevel=1<CR>
+nmap <leader>f2 :set foldlevel=2<CR>
+nmap <leader>f3 :set foldlevel=3<CR>
+nmap <leader>f4 :set foldlevel=4<CR>
+nmap <leader>f5 :set foldlevel=5<CR>
+nmap <leader>f6 :set foldlevel=6<CR>
+nmap <leader>f7 :set foldlevel=7<CR>
+nmap <leader>f8 :set foldlevel=8<CR>
+nmap <leader>f9 :set foldlevel=9<CR>
+
+map <F5> <Esc>:w<CR>:!cl.bat %<CR>
+imap <F5> <Esc>:w<CR>:!cl.bat %<CR>
+" }}}
+
+" => behave like MS-Windows {{{
 " Most are copied from mswin.vim
-" backspace and cursor keys wrap to previous/next line
+" Set options and add mapping such that Vim behaves a lot like MS-Windows
 behave mswin
 set backspace=indent,eol,start whichwrap+=<,>,[,]
 " backspace in Visual mode deletes selection
@@ -253,29 +281,9 @@ cnoremap <C-A> <C-C>gggH<C-O>G
 onoremap <C-A> <C-C>gggH<C-O>G
 snoremap <C-A> <C-C>gggH<C-O>G
 xnoremap <C-A> <C-C>ggVG
+" }}}
 
-" date/time info quick insert
-nnoremap <F10> "=strftime("%Y-%m-%d/%H:%M:%S")<CR>gP
-inoremap <F10> <C-R>=strftime("%Y-%m-%d/%H:%M:%S")<CR>
-
-" Set Up and Down non-linewise
-noremap <Up> gk
-noremap <Down> gj
-" ------------------------------------------------------------------
-" Desc: Vim UI
-" ------------------------------------------------------------------
-set wildmenu " turn on wild menu, try typing :h and press <Tab>
-set showcmd	" display incomplete commands
-set ruler " show the cursor position all the time
-"set hid " allow to change buffer without saving
-set shortmess=atI " shortens messages to avoid 'press a key' prompt and no ad when launch vim
-set lazyredraw " do not redraw while executing macros (much faster)
-"set display+=lastline " for easy browse last line with wrap text
-set cmdheight=2 "set cmdline height to 2
-set laststatus=2 " show status bar (default is 1, can not display status bar)
-
-
-"set status bar (uncomment the next line, if don't use powerline)
+" => set status bar (uncomment the next line, if don't use air-line) {{{
 "set statusline=%F\ %m\ %r\ \ \ ASCII=%b,HEX=%B\ \ \ %=line:%-03l/%-03L\ col:%-03c\ %p%%\ \ \ %{strftime(\"%Y-%m-%d\ %H:%M\")}
 " information of status bar：
 " %F   file name
@@ -292,8 +300,9 @@ set laststatus=2 " show status bar (default is 1, can not display status bar)
 " %p    percentage of entire file
 " %%    %
 " %L    total line numbers
+" }}}
 
-"Windows size initially
+" => Windows size initially {{{
 if has('gui_running') && has('win32')
     "maximize the window
     au GUIENTER * simalt ~x
@@ -305,68 +314,21 @@ else
     set lines=120
     set columns=200
 endif
+" }}}
 
-set showfulltag " show tag with function prototype
-set go=
-set go+=r
-set go+=R
-""隐藏工具栏set guioptions-=T
-""隐藏菜单栏set guioptions-=m
-""隐藏左边滚动条 set guioptions-=l set guioptions-=L
-""隐藏右边滚动条 set guioptions-=r set guioptions-=R
-
-
-" delete space at end
-map <leader><space> :call HandleSpace()<CR>
-func! HandleSpace()
-	:%s/\s\+$//
-" replace tab with spaces
-"	:%retab!
-endfunc
-
-"set transparent
+" => set transparent {{{
 if has('mac') && has('gui_running')
-   set transparency=0
-   nmap ts : set transparency=11<CR>
-   nmap Ts : set transparency=0<CR>
+	set transparency=5
+	nmap ts : set transparency=11<CR>
+	nmap Ts : set transparency=0<CR>
 else
-   nmap ts : call libcallnr("vimtweak.dll", "SetAlpha", 200)<CR>
-   nmap Ts : call libcallnr("vimtweak.dll", "SetAlpha", 255)<CR>
-"   nmap <F11> <Esc>:call libcallnr("vimtweak.dll", "EnableMaximize", 1)<CR>
-"   nmap <F12> <Esc>:call libcallnr("vimtweak.dll", "EnableMaximize", 0)<CR>
+	nmap ts : call libcallnr("vimtweak.dll", "SetAlpha", 200)<CR>
+	nmap Ts : call libcallnr("vimtweak.dll", "SetAlpha", 255)<CR>
 endif
-""Use F11 to fullscreen just like in UNIX
-"map <F11> <Esc>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
+" }}}
 
-" set folding
-"set foldmethod=indent
-"set foldlevel=99 "no folding by default
-
-"字符统计函数
-"g<C-g> vim自带
-
-""------------------------------------------------------------
-""other useful settings
-""------------------------------------------------------------
-""define and highlight in your way
-"highlight MyGroup ctermbg=red guibg=red ctermfg=yellow guifg=yellow term=bold
-"match MyGroup /test/
-	""ctermbg : Background color in console
-	""guibg : Background color in Gvim
-	""ctermfg : Text color in console
-	""guifg : Text color in Gvim
-	""gui : Font formatting in Gvim
-	""term : Font formatting in console (for example, bold)
-"------------------------------------------------------------
-""cursor tracking (this feature gives quite a slowdown when scrolling through the file)
-"set cursorcolumn
-"set cursorline
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""Advanced Setting, .vim plugin needed
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""----------------------------------------------------
-""Requires /plugin/taglist.vim
-""----------------------------------------------------
+" => Plugins {{{
+" taglist.vim {{{
 nnoremap <F8> :TlistToggle<CR>
 if has('win32') || has('win64')
     "Only current file shown
@@ -384,28 +346,32 @@ elseif has('mac')
     let Tlist_Ctags_Cmd = '/opt/local/bin/ctags'
 endif
 let Tlist_WinWidth = 60
-"----------------------------------------------------
-"Requires /plugin/conque_term.vim
-"and python 2.7.1 (32-bit)
-"----------------------------------------------------
+" }}}
+
+" conque_term.vim {{{
 let g:ConqueTerm_FastMode = 1
+let g:ConqueTerm_StartMessages = 0
 if has('win32') || has('win64')
     nmap sh :ConqueTerm powershell.exe<CR>
     nmap cm :ConqueTerm cmd<CR>
-    nmap cy :ConqueTerm c:/cygwin/bin/bash.exe --login -i<CR>
+    "nmap cy :ConqueTerm c:/cygwin/bin/bash.exe --login -i<CR>
 elseif has('mac')
     nmap sh :ConqueTerm bash<CR>
 endif
+func! OpenVSCmd()
+    let vc_path='c:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/bin'
 
-""----------------------------------------------------
-""Requires /plugin/nerdcommenter.vim
-""----------------------------------------------------
+    :echo vc_path
+endfunc
+
+map <F2> :call OpenVSCmd()<cr>
+" }}}
+
+" nerdcommenter.vim {{{
 let NERDCompactSexyComs=1
+" }}}
 
-""----------------------------------------------------
-""Requires /plugin/NERD_tree.vim
-""		  /nerdtree_plugin/*.vim
-""----------------------------------------------------
+" NERD_tree.vim {{{
 let NERDTreeBookmarksFile = $VIM.'/NERDTREE_BOOKMARK'
 nmap <C-x><C-f> :NERDTreeToggle<CR>
 nmap mf :NERDTreeFind<CR>
@@ -418,24 +384,14 @@ if has('win32') || has('win64')
 else
 	nmap mh :NERDTree ~/<CR>
 endif
+" }}}
 
-""----------------------------------------------------
-""Requires plugin/minibufexpl.vim
-""----------------------------------------------------
-" use <C-h><C-j><C-k><C-l> to navigate frames.
-let g:miniBufExplMapWindowNavVim = 1
-" use <C-arrow> to navigate frames.
-"let g:miniBufExplMapWindowNavArrows = 1
-let g:miniBufExplMapCTabSwitchBufs = 1
-let g:miniBufExplModSelTarget = 1
-
-""------------------------------------------------------------
-""                     vimwiki
+" vimwiki {{{
 ""------------------------------------------------------------
 let g:vimwiki_use_mouse = 1
-let g:vimwiki_list = [{'path': 'D:\SkyDrive\Documents\vimwiki\',
-            \ 'path_html': 'D:\SkyDrive\Documents\vimwiki\html\',
-            \ 'template_path': 'D:\SkyDrive\Documents\vimwiki\templates\',
+let g:vimwiki_list = [{'path': 'D:\Baiduyun\Documents\vimwiki\',
+            \ 'path_html': 'D:\Baiduyun\Documents\vimwiki\html\',
+            \ 'template_path': 'D:\Baiduyun\Documents\vimwiki\templates\',
             \ 'template_default': 'def_template',
             \ 'template_ext': '.html'}]
 let g:vimwiki_hl_cb_checked = 1
@@ -446,50 +402,54 @@ let g:vimwiki_file_exts = 'c, cpp, txt, h, hpp, zip, sh, awk, ps, pdf'
 "emacs org-mode like toggle
 nmap <C-c><C-c> <Plug>VimwikiToggleListItem
 nmap <F11> :Vimwiki2HTML<CR>
-nmap <F12> :VimwikiAll2HTML<CR>
-""------------------------------------------------------------
-""                     tasklist
-""------------------------------------------------------------
-"let g:tlTokenList = ['todo', 'TODO', 'FIXME', 'fixme']
-""------------------------------------------------------------
-""                     syntastic
-""------------------------------------------------------------
+"nmap <F12> :VimwikiAll2HTML<CR>
+" }}}
+
+" syntastic {{{
 let g:syntastic_python_checkers = ['flake8']
 let g:syntastic_python_flake8_args='--ignore=E501, E302'
 "let g:syntastic_check_on_open=1
 let g:syntastic_always_populate_loc_list=1
-map <F7> <Esc>:w<CR>:Errors<CR>
-""------------------------------------------------------------
-""                     bufexplorer
-""------------------------------------------------------------
-"noremap <silent> <leader>be :BufExplorer<CR>
+"map <F7> <Esc>:w<CR>:Errors<CR>
+" }}}
 
-""------------------------------------------------------------
-""                     pydoc
-""------------------------------------------------------------
-"let g:pydoc_open_cmd = 'vsplit'
-"
-"------------------------------------------------------------
-"                     ctrlp
-"------------------------------------------------------------
-"let g:ctrlp_cmd = 'CtrlPMRU'
-"let g:ctrlp_map = '<c-m>'
-
-"------------------------------------------------------------
-"                     calendar
-"------------------------------------------------------------
+" calendar {{{
 let g:calendar_weeknm = 1 " WK01
+" }}}
 
-""------------------------------------------------------------
-""                     PerforceBlame
-""------------------------------------------------------------
+" PerforceBlame {{{
 fun! PerforceBlame()
-execute ":!python D:\\devtools\\python\\p4_introduced.py " .  bufname("%") . " " . line(".")
+"execute ":!python D:\\devtools\\python\\p4_introduced.py " .  bufname("%") . " " . line(".")
+execute ":!python E:\\devtools\\python\\p4_introduced.py " .  bufname("%") . " " . line(".")
 endfun
-nmap ,pb :call PerforceBlame()<cr>
+nmap <leader>pb :call PerforceBlame()<cr>
+" }}}
 
-""------------------------------------------------------------
-""                     YankRing
-""------------------------------------------------------------
+" YankRing {{{
 let g:yankring_replace_n_pkey = '<m-p>'
 let g:yankring_replace_n_nkey = '<m-n>'
+" }}}
+
+" vim-indent-guides {{{
+"let g:indent_guides_start_level=2
+let g:indent_guides_guide_size=1
+" }}}
+
+" YouCompleteMe {{{
+""------------------------------------------------------------
+let g:ycm_global_ycm_extra_conf='.ycm_extra_conf.py'
+let g:ycm_complete_in_comments=1
+let g:ycm_confirm_extra_conf=0
+let g:ycm_collect_identifiers_from_tags_files=1
+"inoremap <leader>; <C-x><C-o>  " OmniCppComplete settings
+set completeopt-=preview
+let g:ycm_min_num_of_chars_for_completion=1
+let g:ycm_cache_omnifunc=0
+let g:ycm_seed_identifiers_with_syntax=1
+let g:ycm_key_invoke_completion = '<M-;>'
+"nmap <M-g> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
+nmap <C-]> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
+" }}}
+" }}}
+
+set tag=d:/penguin/labview/branches/2013/dev/source/tags

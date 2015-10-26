@@ -1,5 +1,5 @@
 set nocompatible " Use Vim settings, rather than VI settings. This must be first, because it changes other options as a side effect.
-
+filetype off " required by vundle
 " => environment {{{
 if has("win32")
     let $VIMFILES = $VIM.'/vimfiles'
@@ -10,22 +10,22 @@ endif
 
 " => auto execute {{{
 " transparent the windows a little bit
-autocmd VimEnter * call libcallnr("vimtweak.dll", "SetAlpha", 250)
+if has('win32') || has('win64')
+    autocmd VimEnter * call libcallnr("vimtweak.dll", "SetAlpha", 250)
+endif
 " When opening a file, jump to the last cursor position.
 autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif
 " }}}
 
 " => Bundle setup {{{
 " NOTE: comments after Bundle command are not allowed..
-set rtp+=$VIMFILES\vundle
-call vundle#rc($VIMFILES.'/vundle_plugins')
+" set the runtime path to include Vundle and initialize
+set rtp+=$VIMFILES/bundle/Vundle.vim
+call vundle#begin($VIMFILES.'/vundle_plugins')
 " let Vundle manage Vundle, required!
-Plugin 'gmarik/vundle.vim'
-
+Plugin 'VundleVim/Vundle.vim'
 Plugin 'bling/vim-airline'
-
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'fs111/pydoc.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'a.vim'
 Plugin 'vimwiki'
@@ -37,45 +37,41 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'bufexplorer.zip'
 Plugin 'mru.vim'
-Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'YankRing.vim'
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'drmingdrmer/xptemplate' "code snippets
-Plugin 'Solarized'
+Plugin 'SirVer/ultisnips'
+" Snippets are separated from the engine. Add this if you want them:
+Plugin 'honza/vim-snippets'
 Plugin 'matchit.zip'
-Plugin 'kien/ctrlp.vim' " Code and files fuzzy finder
+Plugin 'kien/ctrlp.vim'
 Plugin 'gregsexton/MatchTag'
 Plugin 'oplatek/Conque-Shell'
-
-"Plugin 'sjl/gundo.vim'
-"Plugin 'tpope/vim-fugitive'
-"Plugin 'wincent/Command-T'
-"Plugin 'alfredodeza/pytest.vim'
-"Plugin 'reinh/vim-makegreen'
-
-"Plugin 'minibufexpl.vim'
-" color scheme explorer
-"Plugin 'sjas/csExplorer'
-" Python and PHP Debugger
-"Plugin 'fisadev/vim-debug.vim'
-"Plugin 'vim-multiple-cursors'
-"Plugin 'UltiSnips'
+Plugin 'Raimondi/delimitMate'
+Plugin 'docunext/closetag.vim'
+Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'kevinw/pyflakes-vim'
+Plugin 'hdima/python-syntax'
+call vundle#end() "required
 " }}}
 
 " => Colors, Encoding and Fonts {{{
-set background=dark
-colorscheme solarized
+"set background=dark
+colorscheme torte
+"filetype indent on
 filetype plugin indent on
 syntax on " Enable syntax highlighting
 
 "" encoding
 set encoding=utf-8
-set fenc=utf-8
+set termencoding=chinese
+set fileencoding=chinese
+set shortmess=atI
 set fileencodings=ucs-bom,utf-8,cp936
 if has('win32') || has('win64')
     source $VIMRUNTIME/delmenu.vim
     source $VIMRUNTIME/menu.vim
-    language messages zh_CN.utf-8
+    set langmenu=zh_CN.UTF-8
+    language messages zh_CN.UTF-8
 endif
 if v:lang =~? '^\(zh\)\|\(ja\)\|\(ko\)'
     set ambiwidth=double
@@ -86,28 +82,20 @@ set nobomb
 
 "Font setting
 if has('win32') || has('win64')
-    set guifont =Consolas:h10:h12
-    "set guifontwide=SimSun:h10:h12
-    set guifontwide=Microsoft\ YaHei:h10:h12
+    set guifont =Consolas:h12
+    set guifontwide=Microsoft\ YaHei:h12
     nmap ml :set guifont =Consolas:h16<CR>:set guifontwide=SimSun:h16<CR>
     nmap mn :set guifont =Consolas:h12<CR>:set guifontwide=SimSun:h12<CR>
     nmap ms :set guifont =Consolas:h10<CR>:set guifontwide=SimSun:h10<CR>
 elseif has('mac')
-    if getfontname( "Bitstream_Vera_Sans_Mono" ) != ""
-        set guifont=Bitstream\ Vera\ Sans\ Mono:h13
-    elseif getfontname( "DejaVu\ Sans\ Mono" ) != ""
-        set guifont=DejaVu\ Sans\ Mono:h13
-    endif
-else
-    set guifont =YaHei\ Consolas\ Hybrid\ 13
-    "nmap mf :set guifont =YaHei\ Consolas\ Hybrid:h15<CR>
+    set guifont=Monaco:h14
 endif
 " }}}
 
 " => General Settings {{{
 set history=256
 set autoread
-set spell
+set nospell
 set scrolloff=3 " Set 3 lines to the cursor - when moving vertically using j/k
 set ignorecase
 set smartcase
@@ -139,6 +127,9 @@ set shiftwidth=4
 set tabstop=4
 set softtabstop=4
 
+set bsdir=buffer
+set autochdir
+
 set autoindent "Auto indent
 set si "Smart indent
 "set wrap "Wrap lines
@@ -168,6 +159,15 @@ set foldmethod=marker
 "set cursorcolumn
 "set cursorline
 "hi cursorline guibg=#333333     " highlight bg color of current
+" auto load vimrc if modified
+if has('win32')
+    autocmd! bufwritepost _vimrc source % " vimrcÎÄ¼þÐÞ¸ÄÖ®ºó×Ô¶¯¼ÓÔØ¡£ windows¡£
+else
+    autocmd! bufwritepost .vimrc source % " vimrcÎÄ¼þÐÞ¸ÄÖ®ºó×Ô¶¯¼ÓÔØ¡£ linux¡£
+endif
+
+" close preview window after leaving insert mode
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 " }}}
 
 " => key binding {{{
@@ -198,24 +198,22 @@ nmap <leader>- yypVr-
 "nmap <F7> :cn<cr>
 
 " Smart way to move between windows (included in minibufexpl.vim)
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+"map <C-j> <C-W>j
+"map <C-k> <C-W>k
+"map <C-h> <C-W>h
+"map <C-l> <C-W>l
 
 nmap <leader>s :source $MYVIMRC<CR>
 nmap <leader>e :e $MYVIMRC<CR>
 
-set bsdir=buffer
-set autochdir
 
 " date/time info quick insert
 nnoremap <leader>d "=strftime("%Y-%m-%d/%H:%M:%S")<CR>gP
 inoremap <leader>d <C-R>=strftime("%Y-%m-%d/%H:%M:%S")<CR>
 
 " Set Up and Down non-linewise
-noremap k gk
-noremap j gj
+"noremap k gk
+"noremap j gj
 
 " enter <br> in insert mode
 imap <S-CR> <br><CR>
@@ -238,54 +236,79 @@ nmap <leader>f7 :set foldlevel=7<CR>
 nmap <leader>f8 :set foldlevel=8<CR>
 nmap <leader>f9 :set foldlevel=9<CR>
 
-map <F5> <Esc>:w<CR>:!cl.bat %<CR>
-imap <F5> <Esc>:w<CR>:!cl.bat %<CR>
+" map <F5> <Esc>:w<CR>:!cl.bat %<CR>
+" imap <F5> <Esc>:w<CR>:!cl.bat %<CR>
+
+" command mode inhense 
+cnoremap <C-j> <t_kd>
+cnoremap <C-k> <t_ku>
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+
+"Map ; to : and save a million keystrokes
+nnoremap ; :
+
+"Keep search pattern at the center of the screen."
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+
+" ¹ö¶¯Speed up scrolling of the viewport slightly
+nnoremap <C-e> 2<C-e>
+nnoremap <C-y> 2<C-y>
+
+set backspace=indent,eol,start whichwrap+=<,>,h,l
+
+map ,cp :vertical diffsplit
+imap ,cp <ESC>:vertical diffsplit
+
 " }}}
 
-" => behave like MS-Windows {{{
-" Most are copied from mswin.vim
-" Set options and add mapping such that Vim behaves a lot like MS-Windows
-behave mswin
-set backspace=indent,eol,start whichwrap+=<,>,[,]
-" backspace in Visual mode deletes selection
-vnoremap <BS> d
+"" => behave like MS-Windows {{{
+"" Most are copied from mswin.vim
+"" Set options and add mapping such that Vim behaves a lot like MS-Windows
+"behave mswin
+"" backspace in Visual mode deletes selection
+"vnoremap <BS> d
 
-" CTRL-X and SHIFT-Del are Cut
-vnoremap <C-X> "+x
-vnoremap <S-Del> "+x
+"" CTRL-X and SHIFT-Del are Cut
+"vnoremap <C-X> "+x
+"vnoremap <S-Del> "+x
 
-" CTRL-C and CTRL-Insert are Copy
-vnoremap <C-C> "+y
-vnoremap <C-Insert> "+y
+"" CTRL-C and CTRL-Insert are Copy
+"vnoremap <C-C> "+y
+"vnoremap <C-Insert> "+y
 
-" CTRL-V and SHIFT-Insert are Paste
-map <C-V>		"+gP
-map <S-Insert>		"+gP
+"" CTRL-V and SHIFT-Insert are Paste
+"map <C-V>		"+gP
+"map <S-Insert>		"+gP
 
-cmap <C-V>		<C-R>+
-cmap <S-Insert>		<C-R>+
+"cmap <C-V>		<C-R>+
+"cmap <S-Insert>		<C-R>+
 
-exe 'inoremap <script> <C-V> <C-G>u' . paste#paste_cmd['i']
-exe 'vnoremap <script> <C-V> ' . paste#paste_cmd['v']
+"exe 'inoremap <script> <C-V> <C-G>u' . paste#paste_cmd['i']
+"exe 'vnoremap <script> <C-V> ' . paste#paste_cmd['v']
 
-imap <S-Insert>		<C-V>
-vmap <S-Insert>		<C-V>
+"imap <S-Insert>		<C-V>
+"vmap <S-Insert>		<C-V>
 
-" Use CTRL-Q to do what CTRL-V used to do
-noremap <C-Q>		<C-V>
+"" Use CTRL-Q to do what CTRL-V used to do
+"noremap <C-Q>		<C-V>
 
-" CTRL-A is Select all
-noremap <C-A> gggH<C-O>G
-inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
-cnoremap <C-A> <C-C>gggH<C-O>G
-onoremap <C-A> <C-C>gggH<C-O>G
-snoremap <C-A> <C-C>gggH<C-O>G
-xnoremap <C-A> <C-C>ggVG
-" }}}
+"" CTRL-A is Select all
+"noremap <C-A> gggH<C-O>G
+"inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
+"cnoremap <C-A> <C-C>gggH<C-O>G
+"onoremap <C-A> <C-C>gggH<C-O>G
+"snoremap <C-A> <C-C>gggH<C-O>G
+"xnoremap <C-A> <C-C>ggVG
+"" }}}
 
 " => set status bar (uncomment the next line, if don't use air-line) {{{
 "set statusline=%F\ %m\ %r\ \ \ ASCII=%b,HEX=%B\ \ \ %=line:%-03l/%-03L\ col:%-03c\ %p%%\ \ \ %{strftime(\"%Y-%m-%d\ %H:%M\")}
-" information of status barï¼š
+" information of status bar£º
 " %F   file name
 " %m   modify status
 " %r   is readonly?
@@ -306,13 +329,13 @@ xnoremap <C-A> <C-C>ggVG
 if has('gui_running') && has('win32')
     "maximize the window
     au GUIENTER * simalt ~x
-    winpos 0 0
+    "winpos 0 0
     "set lines=30
     "set columns=100
 else
-    winpos 0 0
-    set lines=120
-    set columns=200
+    " winpos 0 0
+    " set lines=120
+    " set columns=200
 endif
 " }}}
 
@@ -348,25 +371,6 @@ endif
 let Tlist_WinWidth = 60
 " }}}
 
-" conque_term.vim {{{
-let g:ConqueTerm_FastMode = 1
-let g:ConqueTerm_StartMessages = 0
-if has('win32') || has('win64')
-    nmap sh :ConqueTerm powershell.exe<CR>
-    nmap cm :ConqueTerm cmd<CR>
-    "nmap cy :ConqueTerm c:/cygwin/bin/bash.exe --login -i<CR>
-elseif has('mac')
-    nmap sh :ConqueTerm bash<CR>
-endif
-func! OpenVSCmd()
-    let vc_path='c:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/bin'
-
-    :echo vc_path
-endfunc
-
-map <F2> :call OpenVSCmd()<cr>
-" }}}
-
 " nerdcommenter.vim {{{
 let NERDCompactSexyComs=1
 " }}}
@@ -389,9 +393,9 @@ endif
 " vimwiki {{{
 ""------------------------------------------------------------
 let g:vimwiki_use_mouse = 1
-let g:vimwiki_list = [{'path': 'D:\Baiduyun\Documents\vimwiki\',
-            \ 'path_html': 'D:\Baiduyun\Documents\vimwiki\html\',
-            \ 'template_path': 'D:\Baiduyun\Documents\vimwiki\templates\',
+let g:vimwiki_list = [{'path': 'e:\vimwiki\',
+            \ 'path_html': 'e:\vimwiki\html\',
+            \ 'template_path': '',
             \ 'template_default': 'def_template',
             \ 'template_ext': '.html'}]
 let g:vimwiki_hl_cb_checked = 1
@@ -406,10 +410,12 @@ nmap <F11> :Vimwiki2HTML<CR>
 " }}}
 
 " syntastic {{{
-let g:syntastic_python_checkers = ['flake8']
-let g:syntastic_python_flake8_args='--ignore=E501, E302'
-"let g:syntastic_check_on_open=1
+let g:syntastic_python_checkers = ['pyflakes', 'pep8']
+let g:syntastic_python_pep8_args='--ignore=E501, E225,E124,E712'
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 let g:syntastic_always_populate_loc_list=1
+let g:syntastic_auto_loc_list = 1
 "map <F7> <Esc>:w<CR>:Errors<CR>
 " }}}
 
@@ -437,19 +443,70 @@ let g:indent_guides_guide_size=1
 
 " YouCompleteMe {{{
 ""------------------------------------------------------------
-let g:ycm_global_ycm_extra_conf='.ycm_extra_conf.py'
-let g:ycm_complete_in_comments=1
-let g:ycm_confirm_extra_conf=0
-let g:ycm_collect_identifiers_from_tags_files=1
-"inoremap <leader>; <C-x><C-o>  " OmniCppComplete settings
-set completeopt-=preview
-let g:ycm_min_num_of_chars_for_completion=1
-let g:ycm_cache_omnifunc=0
-let g:ycm_seed_identifiers_with_syntax=1
-let g:ycm_key_invoke_completion = '<M-;>'
+if has('win32') || has('win64')
+    let g:ycm_global_ycm_extra_conf='c:/Program Files (x86)/Vim/vim74/.ycm_extra_conf.py'
+endif
+let g:ycm_complete_in_comments=1 " Completion in comments
+let g:ycm_use_ultisnips_completer = 1 " Default 1, just ensure
+"let g:ycm_confirm_extra_conf=0
+let g:ycm_complete_in_strings = 1 " Completion in string
+let g:ycm_collect_identifiers_from_tags_files=1 " Let YCM read tags from Ctags file
+set completeopt=longest,menu
+"let g:ycm_min_num_of_chars_for_completion=1
+"let g:ycm_cache_omnifunc=0
+let g:ycm_seed_identifiers_with_syntax = 1 " Completion for programming
+"language's keyword
+"let g:ycm_key_invoke_completion = '<M-;>'
 "nmap <M-g> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
-nmap <C-]> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
-" }}}
+"nmap <C-]> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
+
+"let g:ycm_enable_diagnostic_signs = 0
 " }}}
 
-set tag=d:/penguin/labview/branches/2013/dev/source/tags
+" Ultisnips {{{
+let g:UltiSnipsExpandTrigger = "<c-j>"
+let g:UltiSnipsJumpForwardTrigger = "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
+" }}}
+
+" closetag {{{
+let g:closetag_html_style=1
+" }}}
+ 
+" ctrlp {{{
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+    \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
+    \ }
+" }}}
+" rainbow_parentheses {{{
+" exclude this line because black is not easy to recognize
+" \ ['black',       'SeaGreen3'],
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
+
+let g:rbpt_max = 16
+let g:rbpt_loadcmd_toggle = 0
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+" }}}
+" }}}
+" set tag=e:/penguin/labview/branches/2013/dev/source/tags
+" temp

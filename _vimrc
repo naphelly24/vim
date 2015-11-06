@@ -50,6 +50,7 @@ Plugin 'docunext/closetag.vim'
 Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'kevinw/pyflakes-vim'
 Plugin 'hdima/python-syntax'
+Plugin 'tomasr/molokai'
 call vundle#end() "required
 " }}}
 
@@ -160,9 +161,9 @@ set foldmethod=marker
 "hi cursorline guibg=#333333     " highlight bg color of current
 " auto load vimrc if modified
 if has('win32')
-    autocmd! bufwritepost _vimrc source % " vimrcÎÄ¼şĞŞ¸ÄÖ®ºó×Ô¶¯¼ÓÔØ¡£ windows¡£
+    autocmd! bufwritepost _vimrc source % " vimrcæ–‡ä»¶ä¿®æ”¹ä¹‹åè‡ªåŠ¨åŠ è½½ã€‚ windowsã€‚
 else
-    autocmd! bufwritepost .vimrc source % " vimrcÎÄ¼şĞŞ¸ÄÖ®ºó×Ô¶¯¼ÓÔØ¡£ linux¡£
+    autocmd! bufwritepost .vimrc source % " vimrcæ–‡ä»¶ä¿®æ”¹ä¹‹åè‡ªåŠ¨åŠ è½½ã€‚ linuxã€‚
 endif
 
 " close preview window after leaving insert mode
@@ -251,7 +252,7 @@ nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 nnoremap <silent> g* g*zz
 
-" ¹ö¶¯Speed up scrolling of the viewport slightly
+" æ»šåŠ¨Speed up scrolling of the viewport slightly
 nnoremap <C-e> 2<C-e>
 nnoremap <C-y> 2<C-y>
 
@@ -304,7 +305,7 @@ imap ,cp <ESC>:vertical diffsplit
 
 " => set status bar (uncomment the next line, if don't use air-line) {{{
 "set statusline=%F\ %m\ %r\ \ \ ASCII=%b,HEX=%B\ \ \ %=line:%-03l/%-03L\ col:%-03c\ %p%%\ \ \ %{strftime(\"%Y-%m-%d\ %H:%M\")}
-" information of status bar£º
+" information of status barï¼š
 " %F   file name
 " %m   modify status
 " %r   is readonly?

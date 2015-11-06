@@ -45,7 +45,6 @@ Plugin 'honza/vim-snippets'
 Plugin 'matchit.zip'
 Plugin 'kien/ctrlp.vim'
 Plugin 'gregsexton/MatchTag'
-Plugin 'oplatek/Conque-Shell'
 Plugin 'Raimondi/delimitMate'
 Plugin 'docunext/closetag.vim'
 Plugin 'kien/rainbow_parentheses.vim'
@@ -56,7 +55,7 @@ call vundle#end() "required
 
 " => Colors, Encoding and Fonts {{{
 "set background=dark
-colorscheme torte
+colorscheme molokai
 "filetype indent on
 filetype plugin indent on
 syntax on " Enable syntax highlighting
@@ -175,9 +174,6 @@ let mapleader = ','
 "" use Ctrl+g to escape in insert mode
 inoremap <C-g> <Esc>
 nmap <C-cr> :only<CR>
-
-" execute current python script
-"map <F5> <Esc>:w<CR>:!python %<CR>
 
 " enter DEBUG
 "imap <leader>p print "DEBUG_HERE"<CR>
@@ -393,30 +389,37 @@ endif
 " vimwiki {{{
 ""------------------------------------------------------------
 let g:vimwiki_use_mouse = 1
-let g:vimwiki_list = [{'path': 'e:\vimwiki\',
-            \ 'path_html': 'e:\vimwiki\html\',
-            \ 'template_path': '',
-            \ 'template_default': 'def_template',
+let g:vimwiki_list = [{'path': '$VIMFILES/vimwiki/',
+            \ 'path_html': '$VIMFILES/vimwiki/html/',
+            \ 'template_path': '$VIMFILES/vimwiki/html/templates/',
+            \ 'template_default': 'default',
             \ 'template_ext': '.html'}]
+" do not remove my default.html (template) when executing :VimwikiAll2HTML
+let g:vimwiki_user_htmls = 'default.html'
 let g:vimwiki_hl_cb_checked = 1
+let g:vimwiki_list_ignore_newline = 0
 let g:vimwiki_menu = ''
-let g:vimwiki_folding = 'expr'
+"let g:vimwiki_folding = 'expr'
 let g:vimwiki_w32_dir_enc = 'cp936'
 let g:vimwiki_file_exts = 'c, cpp, txt, h, hpp, zip, sh, awk, ps, pdf'
 "emacs org-mode like toggle
 nmap <C-c><C-c> <Plug>VimwikiToggleListItem
 nmap <F11> :Vimwiki2HTML<CR>
-"nmap <F12> :VimwikiAll2HTML<CR>
+nmap <F12> :VimwikiAll2HTML<CR>
 " }}}
 
 " syntastic {{{
 let g:syntastic_python_checkers = ['pyflakes', 'pep8']
-let g:syntastic_python_pep8_args='--ignore=E501, E225,E124,E712'
+"let g:syntastic_python_pep8_args='--ignore=E501, E225,E124,E712'
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_always_populate_loc_list=1
-let g:syntastic_auto_loc_list = 1
-"map <F7> <Esc>:w<CR>:Errors<CR>
+let g:syntastic_auto_loc_list = 0
+map <F7> <Esc>:w<CR>:Errors<CR>
+" execute current python script
+map <F5> <Esc>:w<CR>:!python %<CR>
+imap <F5> <Esc>:w<CR>:!python %<CR>
+
 " }}}
 
 " calendar {{{
@@ -458,7 +461,7 @@ let g:ycm_seed_identifiers_with_syntax = 1 " Completion for programming
 "language's keyword
 "let g:ycm_key_invoke_completion = '<M-;>'
 "nmap <M-g> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
-"nmap <C-]> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
+nmap <C-]> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
 
 "let g:ycm_enable_diagnostic_signs = 0
 " }}}

@@ -54,6 +54,10 @@ Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'kevinw/pyflakes-vim'
 Plugin 'hdima/python-syntax'
 Plugin 'tomasr/molokai'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-fugitive'
+Plugin 'rking/ag.vim'
+Plugin 'joonty/vdebug'
 call vundle#end() "required
 " }}}
 
@@ -159,10 +163,8 @@ set background=dark
 
 "" encoding
 set encoding=utf-8
-"set termencoding=chinese
-set termencoding=cp936
-"set fileencoding=chinese
-set fileencodings=ucs-bom,utf-8,cp936
+set termencoding=utf-8
+set fileencoding=chinese
 set shortmess=atI
 set fileencodings=ucs-bom,utf-8,cp936
 if has('win32') || has('win64')
@@ -214,7 +216,6 @@ set wrap "Wrap lines
 " Super useful! From an idea by Michael Naumann
 vnoremap <silent> * :call VisualSelection('f', '')<CR>
 vnoremap <silent> # :call VisualSelection('b', '')<CR>
-"}}}
 set wildmenu " turn on wild menu, try typing :h and press <Tab>
 set showcmd	" display incomplete commands
 set ruler " show the cursor position all the time
@@ -241,9 +242,9 @@ set foldmethod=marker
 "hi cursorline guibg=#333333     " highlight bg color of current
 " auto load vimrc if modified
 if has('win32')
-    autocmd! bufwritepost _vimrc source % " vimrcÊñá‰ª∂‰øÆÊîπ‰πãÂêéËá™Âä®Âä†ËΩΩ„ÄÇ windows„ÄÇ
+    autocmd! bufwritepost _vimrc source % " vimrcŒƒº˛–ﬁ∏ƒ÷Æ∫Û◊‘∂Øº”‘ÿ°£ windows°£
 else
-    autocmd! bufwritepost .vimrc source % " vimrcÊñá‰ª∂‰øÆÊîπ‰πãÂêéËá™Âä®Âä†ËΩΩ„ÄÇ linux„ÄÇ
+    autocmd! bufwritepost .vimrc source % " vimrcŒƒº˛–ﬁ∏ƒ÷Æ∫Û◊‘∂Øº”‘ÿ°£ linux°£
 endif
 
 " close preview window after leaving insert mode
@@ -317,7 +318,7 @@ nmap <leader>f9 :set foldlevel=9<CR>
 " map <F5> <Esc>:w<CR>:!cl.bat %<CR>
 " imap <F5> <Esc>:w<CR>:!cl.bat %<CR>
 
-" command mode inhense
+" command mode inhense 
 cnoremap <C-j> <t_kd>
 cnoremap <C-k> <t_ku>
 cnoremap <C-a> <Home>
@@ -386,7 +387,7 @@ noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
 " => set status bar (uncomment the next line, if don't use air-line) {{{
 "set statusline=%F\ %m\ %r\ \ \ ASCII=%b,HEX=%B\ \ \ %=line:%-03l/%-03L\ col:%-03c\ %p%%\ \ \ %{strftime(\"%Y-%m-%d\ %H:%M\")}
-" information of status barÔºö
+" information of status bar£∫
 " %F   file name
 " %m   modify status
 " %r   is readonly?
@@ -431,21 +432,16 @@ endif
 " => Plugins {{{
 " taglist.vim {{{
 nnoremap <F8> :TlistToggle<CR>
-if has('win32') || has('win64')
-    "Only current file shown
-    let Tlist_Show_One_File=1
+"Only current file shown
+let Tlist_Show_One_File=1
 
-    "Last window left, close it
-    let Tlist_Exit_OnlyWindow=1
-    let Tlist_File_Fold_Auto_Close=1
+"Last window left, close it
+let Tlist_Exit_OnlyWindow=1
+let Tlist_File_Fold_Auto_Close=1
 
-    ""Right side
-    let Tlist_Use_Right_Window=1
-    let Tlist_Show_Menu=1
-elseif has('mac')
-    "need: >sudo port install ctags for mac
-    let Tlist_Ctags_Cmd = '/opt/local/bin/ctags'
-endif
+""Right side
+let Tlist_Use_Right_Window=1
+let Tlist_Show_Menu=1
 let Tlist_WinWidth = 60
 " }}}
 
@@ -471,9 +467,9 @@ endif
 " vimwiki {{{
 ""------------------------------------------------------------
 let g:vimwiki_use_mouse = 1
-let g:vimwiki_list = [{'path': $VIMFILES . '/vimwiki/',
-            \ 'path_html': $VIMFILES . '/vimwiki/html/',
-            \ 'template_path': $VIMFILES .'/vimwiki/html/templates/',
+let g:vimwiki_list = [{'path': '$VIMFILES/vimwiki/',
+            \ 'path_html': '$VIMFILES/vimwiki/html/',
+            \ 'template_path': '$VIMFILES/vimwiki/html/templates/',
             \ 'template_default': 'default',
             \ 'template_ext': '.html'}]
 " do not remove my default.html (template) when executing :VimwikiAll2HTML
@@ -543,7 +539,7 @@ let g:ycm_seed_identifiers_with_syntax = 1 " Completion for programming
 "language's keyword
 "let g:ycm_key_invoke_completion = '<M-;>'
 "nmap <M-g> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
-nmap <C-]> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
+"nmap <C-]> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
 
 "let g:ycm_enable_diagnostic_signs = 0
 " }}}
@@ -557,14 +553,13 @@ let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
 " closetag {{{
 let g:closetag_html_style=1
 " }}}
-
+ 
 " ctrlp {{{
 let g:ctrlp_custom_ignore = {
     \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
     \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
     \ }
 " }}}
-
 " rainbow_parentheses {{{
 " exclude this line because black is not easy to recognize
 " \ ['black',       'SeaGreen3'],
@@ -593,4 +588,12 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 " }}}
+
+" ag.vim {{{
+"let g:ag_prg="<custom-ag-path-goes-here> --vimgrep"
+"let g:agprg="/usr/local/bin/ag --column"
+"always start searching from your project root instead of the cwd
+let g:ag_working_path_mode="r"
 " }}}
+" }}}
+" set tag=e:/penguin/labview/branches/2013/dev/source/tags

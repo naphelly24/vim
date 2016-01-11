@@ -3,4 +3,6 @@ vim74
 vimfiles
 NERDTREE_BOOKMARK
 vimfiles.zip
-.gitignore
+_vimrc~
+
+

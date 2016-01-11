@@ -53,6 +53,7 @@ Plugin 'docunext/closetag.vim'
 Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'kevinw/pyflakes-vim'
 Plugin 'hdima/python-syntax'
+Plugin 'tomasr/molokai'
 call vundle#end() "required
 " }}}
 
@@ -214,6 +215,40 @@ set wrap "Wrap lines
 vnoremap <silent> * :call VisualSelection('f', '')<CR>
 vnoremap <silent> # :call VisualSelection('b', '')<CR>
 "}}}
+set wildmenu " turn on wild menu, try typing :h and press <Tab>
+set showcmd	" display incomplete commands
+set ruler " show the cursor position all the time
+set hid " allow to change buffer without saving
+set shortmess=atI " shortens messages to avoid 'press a key' prompt and no ad when launch vim
+set lazyredraw " do not redraw while executing macros (much faster)
+set display+=lastline " for easy browse last line with wrap text
+set cmdheight=2 "set cmdline height to 2
+set laststatus=2 " show status bar (default is 1, can not display status bar)
+set showfulltag " show tag with function prototype
+
+set go=
+set go+=r
+set go+=R
+
+" set folding
+set foldenable
+set foldmethod=marker
+"set foldlevel=99 "no folding by default
+
+""cursor tracking (this feature gives quite a slowdown when scrolling through the file)
+"set cursorcolumn
+"set cursorline
+"hi cursorline guibg=#333333     " highlight bg color of current
+" auto load vimrc if modified
+if has('win32')
+    autocmd! bufwritepost _vimrc source % " vimrc文件修改之后自动加载。 windows。
+else
+    autocmd! bufwritepost .vimrc source % " vimrc文件修改之后自动加载。 linux。
+endif
+
+" close preview window after leaving insert mode
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+" }}}
 
 " => key binding {{{
 " Remap VIM 0 to first non-blank character
@@ -301,7 +336,6 @@ nnoremap <silent> g* g*zz
 " Speed up scrolling of the viewport slightly
 nnoremap <C-e> 2<C-e>
 nnoremap <C-y> 2<C-y>
-
 
 map ,cp :vertical diffsplit
 imap ,cp <ESC>:vertical diffsplit

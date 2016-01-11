@@ -1,5 +1,8 @@
+" => Vundle prerequisites {{{
 set nocompatible " Use Vim settings, rather than VI settings. This must be first, because it changes other options as a side effect.
 filetype off " required by vundle
+"}}}
+
 " => environment {{{
 if has("win32")
     let $VIMFILES = $VIM.'/vimfiles'
@@ -53,17 +56,112 @@ Plugin 'hdima/python-syntax'
 call vundle#end() "required
 " }}}
 
-" => Colors, Encoding and Fonts {{{
-"set background=dark
-colorscheme molokai
-"filetype indent on
+" => General Settings {{{
+set history=256
 filetype plugin indent on
+set autoread " Set to auto read when a file is changed from the outside
+let mapleader = ','
+let g:mapleader = ','
+" Fast saving
+nmap <leader>w :w!<cr>
+
+set nospell
+set confirm
+set clipboard+=unnamed " share clipboard with windows
+set colorcolumn=81
+"hi colorcolumn guibg=lightgreen
+" persistent undo
+set undofile
+set undodir=$VIMFILES/\_undodir " you should create _undodir first!
+set undolevels=1000 "maximum number of changes that can be undone"
+
+" Use spaces instead of tabs
+set listchars=tab:->,trail:-
+
+set bsdir=buffer
+set autochdir
+
+set nu "line number
+
+
+" set folding
+set foldenable
+set foldmethod=marker
+"set foldlevel=99 "no folding by default
+
+""cursor tracking (this feature gives quite a slowdown when scrolling through the file)
+"set cursorcolumn
+"set cursorline
+"hi cursorline guibg=#333333     " highlight bg color of current
+" auto load vimrc if modified
+if has('win32') " load vimrc when being modified
+    autocmd! bufwritepost _vimrc source %
+else
+    autocmd! bufwritepost .vimrc source %
+endif
+
+" close preview window after leaving insert mode
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+"}}}
+
+" => Vim user interface {{{
+set scrolloff=3 " Set 3 lines to the cursor - when moving vertically using j/k
+set wildmenu " turn on wild menu, try typing :h and press <Tab>
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc
+if has("win16") || has("win32")
+    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
+else
+    set wildignore+=.git\*,.hg\*,.svn\*
+endif
+set ruler " show the cursor position all the time
+set cmdheight=2 "set cmdline height to 2
+set hid " allow to change buffer without saving
+set backspace=indent,eol,start whichwrap+=<,>,h,l
+if has('mouse')
+    set mouse=a
+endif
+set ignorecase
+set smartcase
+set hlsearch
+set incsearch
+set lazyredraw " do not redraw while executing macros (much faster)
+set magic
+set showmatch
+set mat=2 " How many tenths of a second to blink when matching brackets
+set noerrorbells " No annoying sound on errors
+set novisualbell
+set t_vb=
+set tm=500
+
+set foldcolumn=1 " Add a bit extra margin to the left
+
+set showcmd	" display incomplete commands
+set shortmess=atI " shortens messages to avoid 'press a key' prompt and no ad when launch vim
+set display+=lastline " for easy browse last line with wrap text
+set laststatus=2 " show status bar (default is 1, can not display status bar)
+set showfulltag " show tag with function prototype
+
+set go=
+set go+=r
+set go+=R
+"}}}
+
+" => Colors, Encoding and Fonts {{{
 syntax on " Enable syntax highlighting
+try
+    colorscheme molokai
+catch
+endtry
+
+set background=dark
 
 "" encoding
 set encoding=utf-8
-set termencoding=chinese
-set fileencoding=chinese
+"set termencoding=chinese
+set termencoding=cp936
+"set fileencoding=chinese
+set fileencodings=ucs-bom,utf-8,cp936
 set shortmess=atI
 set fileencodings=ucs-bom,utf-8,cp936
 if has('win32') || has('win64')
@@ -91,86 +189,35 @@ elseif has('mac')
 endif
 " }}}
 
-" => General Settings {{{
-set history=256
-set autoread
-set nospell
-set scrolloff=3 " Set 3 lines to the cursor - when moving vertically using j/k
-set ignorecase
-set smartcase
-set hlsearch
-set incsearch
-set magic
-set showmatch
-"set textwidth=80
-set colorcolumn=81
-"hi colorcolumn guibg=lightgreen
-set noerrorbells " No annoying sound on errors
-set novisualbell
-set t_vb=
-set tm=500
-set confirm
-set clipboard+=unnamed " share clipboard with windows
+" => Files, backups and undo {{{
 set nobackup
-" persistent undo
-set undofile
-set undodir=$VIMFILES/\_undodir " you should create _undodir first!
-set undolevels=1000 "maximum number of changes that can be undone"
+set nowb
+set noswapfile
+"}}}
 
-" Use spaces instead of tabs
-set expandtab
-set listchars=tab:->,trail:-
-" Be smart when using tabs
-set smarttab
+" => Text, tab and indent related {{{
+set expandtab " use spaces instead of tabs
+set smarttab " Be smart when using tabs
 set shiftwidth=4
 set tabstop=4
 set softtabstop=4
-
-set bsdir=buffer
-set autochdir
-
+"set textwidth=80
 set autoindent "Auto indent
 set si "Smart indent
-"set wrap "Wrap lines
-set nu "line number
+set wrap "Wrap lines
+"}}}
 
-set wildmenu " turn on wild menu, try typing :h and press <Tab>
-set showcmd	" display incomplete commands
-set ruler " show the cursor position all the time
-set hid " allow to change buffer without saving
-set shortmess=atI " shortens messages to avoid 'press a key' prompt and no ad when launch vim
-set lazyredraw " do not redraw while executing macros (much faster)
-set display+=lastline " for easy browse last line with wrap text
-set cmdheight=2 "set cmdline height to 2
-set laststatus=2 " show status bar (default is 1, can not display status bar)
-set showfulltag " show tag with function prototype
-
-set go=
-set go+=r
-set go+=R
-
-" set folding
-set foldenable
-set foldmethod=marker
-"set foldlevel=99 "no folding by default
-
-""cursor tracking (this feature gives quite a slowdown when scrolling through the file)
-"set cursorcolumn
-"set cursorline
-"hi cursorline guibg=#333333     " highlight bg color of current
-" auto load vimrc if modified
-if has('win32')
-    autocmd! bufwritepost _vimrc source % " vimrcÎÄ¼þÐÞ¸ÄÖ®ºó×Ô¶¯¼ÓÔØ¡£ windows¡£
-else
-    autocmd! bufwritepost .vimrc source % " vimrcÎÄ¼þÐÞ¸ÄÖ®ºó×Ô¶¯¼ÓÔØ¡£ linux¡£
-endif
-
-" close preview window after leaving insert mode
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-" }}}
+" => Visual mode related {{{
+""""""""""""""""""""""""""""""
+" Visual mode pressing * or # searches for the current selection
+" Super useful! From an idea by Michael Naumann
+vnoremap <silent> * :call VisualSelection('f', '')<CR>
+vnoremap <silent> # :call VisualSelection('b', '')<CR>
+"}}}
 
 " => key binding {{{
-let mapleader = ','
+" Remap VIM 0 to first non-blank character
+map 0 ^ 
 "" use Ctrl+g to escape in insert mode
 inoremap <C-g> <Esc>
 nmap <C-cr> :only<CR>
@@ -235,7 +282,7 @@ nmap <leader>f9 :set foldlevel=9<CR>
 " map <F5> <Esc>:w<CR>:!cl.bat %<CR>
 " imap <F5> <Esc>:w<CR>:!cl.bat %<CR>
 
-" command mode inhense 
+" command mode inhense
 cnoremap <C-j> <t_kd>
 cnoremap <C-k> <t_ku>
 cnoremap <C-a> <Home>
@@ -251,15 +298,16 @@ nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 nnoremap <silent> g* g*zz
 
-" ¹ö¶¯Speed up scrolling of the viewport slightly
+" Speed up scrolling of the viewport slightly
 nnoremap <C-e> 2<C-e>
 nnoremap <C-y> 2<C-y>
 
-set backspace=indent,eol,start whichwrap+=<,>,h,l
 
 map ,cp :vertical diffsplit
 imap ,cp <ESC>:vertical diffsplit
 
+" Remove the Windows ^M - when the encodings gets messed up
+noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 " }}}
 
 "" => behave like MS-Windows {{{
@@ -304,7 +352,7 @@ imap ,cp <ESC>:vertical diffsplit
 
 " => set status bar (uncomment the next line, if don't use air-line) {{{
 "set statusline=%F\ %m\ %r\ \ \ ASCII=%b,HEX=%B\ \ \ %=line:%-03l/%-03L\ col:%-03c\ %p%%\ \ \ %{strftime(\"%Y-%m-%d\ %H:%M\")}
-" information of status bar£º
+" information of status barï¼š
 " %F   file name
 " %m   modify status
 " %r   is readonly?
@@ -389,9 +437,9 @@ endif
 " vimwiki {{{
 ""------------------------------------------------------------
 let g:vimwiki_use_mouse = 1
-let g:vimwiki_list = [{'path': '$VIMFILES/vimwiki/',
-            \ 'path_html': '$VIMFILES/vimwiki/html/',
-            \ 'template_path': '$VIMFILES/vimwiki/html/templates/',
+let g:vimwiki_list = [{'path': $VIMFILES . '/vimwiki/',
+            \ 'path_html': $VIMFILES . '/vimwiki/html/',
+            \ 'template_path': $VIMFILES .'/vimwiki/html/templates/',
             \ 'template_default': 'default',
             \ 'template_ext': '.html'}]
 " do not remove my default.html (template) when executing :VimwikiAll2HTML
@@ -475,13 +523,14 @@ let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
 " closetag {{{
 let g:closetag_html_style=1
 " }}}
- 
+
 " ctrlp {{{
 let g:ctrlp_custom_ignore = {
     \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
     \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
     \ }
 " }}}
+
 " rainbow_parentheses {{{
 " exclude this line because black is not easy to recognize
 " \ ['black',       'SeaGreen3'],
@@ -511,5 +560,3 @@ au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 " }}}
 " }}}
-" set tag=e:/penguin/labview/branches/2013/dev/source/tags
-" temp

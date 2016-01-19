@@ -58,6 +58,7 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'rking/ag.vim'
 Plugin 'joonty/vdebug'
+Plugin 'DoxygenToolkit.vim'
 call vundle#end() "required
 " }}}
 
@@ -88,10 +89,14 @@ set autochdir
 
 set nu "line number
 
-
 " set folding
 set foldenable
-set foldmethod=marker
+"set foldmethod=marker
+"let g:php_folding=2
+set foldmethod=syntax
+set foldlevel=1
+map <leader>f :set foldmethod=syntax<cr>zM<cr>
+map <leader>F :set foldmethod=marker<cr>zR<cr>
 "set foldlevel=99 "no folding by default
 
 ""cursor tracking (this feature gives quite a slowdown when scrolling through the file)
@@ -99,10 +104,10 @@ set foldmethod=marker
 "set cursorline
 "hi cursorline guibg=#333333     " highlight bg color of current
 " auto load vimrc if modified
-if has('win32') " load vimrc when being modified
-    autocmd! bufwritepost _vimrc source %
+if has('win32')
+    autocmd! bufwritepost _vimrc source % " vimrcÊñá‰ª∂‰øÆÊîπ‰πãÂêéËá™Âä®Âä†ËΩΩ„ÄÇ windows„ÄÇ
 else
-    autocmd! bufwritepost .vimrc source %
+    autocmd! bufwritepost .vimrc source % " vimrcÊñá‰ª∂‰øÆÊîπ‰πãÂêéËá™Âä®Âä†ËΩΩ„ÄÇ linux„ÄÇ
 endif
 
 " close preview window after leaving insert mode
@@ -164,9 +169,9 @@ set background=dark
 "" encoding
 set encoding=utf-8
 set termencoding=utf-8
-set fileencoding=chinese
+set fileencoding=utf-8
 set shortmess=atI
-set fileencodings=ucs-bom,utf-8,cp936
+"set fileencodings=ucs-bom,utf-8,cp936
 if has('win32') || has('win64')
     source $VIMRUNTIME/delmenu.vim
     source $VIMRUNTIME/menu.vim
@@ -188,7 +193,7 @@ if has('win32') || has('win64')
     nmap mn :set guifont =Consolas:h12<CR>:set guifontwide=SimSun:h12<CR>
     nmap ms :set guifont =Consolas:h10<CR>:set guifontwide=SimSun:h10<CR>
 elseif has('mac')
-    set guifont=Monaco:h14
+    set guifont=Monaco:h12
 endif
 " }}}
 
@@ -231,21 +236,10 @@ set go=
 set go+=r
 set go+=R
 
-" set folding
-set foldenable
-set foldmethod=marker
-"set foldlevel=99 "no folding by default
-
 ""cursor tracking (this feature gives quite a slowdown when scrolling through the file)
 "set cursorcolumn
 "set cursorline
 "hi cursorline guibg=#333333     " highlight bg color of current
-" auto load vimrc if modified
-if has('win32')
-    autocmd! bufwritepost _vimrc source % " vimrcŒƒº˛–ﬁ∏ƒ÷Æ∫Û◊‘∂Øº”‘ÿ°£ windows°£
-else
-    autocmd! bufwritepost .vimrc source % " vimrcŒƒº˛–ﬁ∏ƒ÷Æ∫Û◊‘∂Øº”‘ÿ°£ linux°£
-endif
 
 " close preview window after leaving insert mode
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
@@ -277,10 +271,10 @@ nmap <leader>- yypVr-
 "nmap <F7> :cn<cr>
 
 " Smart way to move between windows (included in minibufexpl.vim)
-"map <C-j> <C-W>j
-"map <C-k> <C-W>k
-"map <C-h> <C-W>h
-"map <C-l> <C-W>l
+nmap <C-j> <C-W>j
+nmap <C-k> <C-W>k
+nmap <C-h> <C-W>h
+nmap <C-l> <C-W>l
 
 nmap <leader>s :source $MYVIMRC<CR>
 nmap <leader>e :e $MYVIMRC<CR>
@@ -387,7 +381,7 @@ noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
 " => set status bar (uncomment the next line, if don't use air-line) {{{
 "set statusline=%F\ %m\ %r\ \ \ ASCII=%b,HEX=%B\ \ \ %=line:%-03l/%-03L\ col:%-03c\ %p%%\ \ \ %{strftime(\"%Y-%m-%d\ %H:%M\")}
-" information of status bar£∫
+" information of status barÔºö
 " %F   file name
 " %m   modify status
 " %r   is readonly?
@@ -452,15 +446,15 @@ let NERDCompactSexyComs=1
 " NERD_tree.vim {{{
 let NERDTreeBookmarksFile = $VIM.'/NERDTREE_BOOKMARK'
 nmap <C-x><C-f> :NERDTreeToggle<CR>
-nmap mf :NERDTreeFind<CR>
+nmap <leader>mf :NERDTreeFind<CR>
 "nmap mm :NERDTreeMirror<CR>
 if has('win32') || has('win64')
-	nmap mc :NERDTree c://<CR>
-	nmap md :NERDTree d://<CR>
-	nmap me :NERDTree e://<CR>
-	nmap mh :NERDTree ~//<CR>
+	nmap <leader>mc :NERDTree c://<CR>
+	nmap <leader>md :NERDTree d://<CR>
+	nmap <leader>me :NERDTree e://<CR>
+	nmap <leader>mh :NERDTree ~//<CR>
 else
-	nmap mh :NERDTree ~/<CR>
+	nmap <leader>mh :NERDTree ~/<CR>
 endif
 " }}}
 
@@ -493,10 +487,10 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_always_populate_loc_list=1
 let g:syntastic_auto_loc_list = 0
-map <F7> <Esc>:w<CR>:Errors<CR>
+"map <F7> <Esc>:w<CR>:Errors<CR>
 " execute current python script
-map <F5> <Esc>:w<CR>:!python %<CR>
-imap <F5> <Esc>:w<CR>:!python %<CR>
+"map <F5> <Esc>:w<CR>:!python %<CR>
+"imap <F5> <Esc>:w<CR>:!python %<CR>
 
 " }}}
 
@@ -560,6 +554,7 @@ let g:ctrlp_custom_ignore = {
     \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
     \ }
 " }}}
+
 " rainbow_parentheses {{{
 " exclude this line because black is not easy to recognize
 " \ ['black',       'SeaGreen3'],
@@ -590,10 +585,33 @@ au Syntax * RainbowParenthesesLoadBraces
 " }}}
 
 " ag.vim {{{
-"let g:ag_prg="<custom-ag-path-goes-here> --vimgrep"
 "let g:agprg="/usr/local/bin/ag --column"
 "always start searching from your project root instead of the cwd
 let g:ag_working_path_mode="r"
 " }}}
+
+" DoxygenToolkit.vim {{{
+let g:DoxygenToolkit_authorName="hailin"
 " }}}
-" set tag=e:/penguin/labview/branches/2013/dev/source/tags
+
+" mru.vim {{{
+let MRU_Exclude_Files = '^/tmp/.*\|^/var/tmp/.*\|^/private/var/.*'  " For Unix
+" }}}
+
+" }}}
+
+" Misc {{{
+set tag=~/Sites/ecshop/tags
+
+function! UpdateCtags()
+    !ctags -R 
+    TlistUpdate
+endfunction
+nmap <leader>uc :call UpdateCtags()<CR>
+"autocmd BufWritePost *.php call UpdateCtags()
+
+"php indenting
+" To indent 'case:' and 'default:' statements in switch() blocks: >
+let g:PHP_vintage_case_default_indent = 1
+"let g:PHP_BracesAtCodeLevel = 1
+" }}}
